@@ -1,0 +1,54 @@
+<div class="modalForm">
+    <div class="header">
+        <div class="headerLeft">
+            <i class="fa-solid fa-object-group"></i>
+            <p> &nbsp; Ledger Group</p>
+        </div>
+        <div class="headerRight">
+            <p (click)="CloseDialog()" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="row" style="margin-top: 5px;" >           
+
+            <div class="col50">
+                <div class="formGroup" [ngClass]="!LGrpNameValid ? 'invalid' : ''" >
+                    <input type="text" class="formControl" required [(ngModel)] = LGrp.Grp_Name  />
+                    <label for="" class="formLabel"> LGrp Name </label>
+                    <div class="errorHint" *ngIf="!LGrpNameValid" > Invalid Name </div>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">
+                    <input type="text" class="formControl" required [(ngModel)] = LGrp.Remarks  />
+                    <label for="" class="formLabel"> Remarks </label>                    
+                </div>
+            </div>
+
+        </div> 
+
+        <div class="row" style="margin-top: 15px; display: flex; flex-direction: row; align-items: center; text-align: center; pointer-events:none; ">
+            <div class="col50">
+                <label class="toggle">
+                    <input class="toggle-checkbox" type="checkbox" readonly [checked]="LGrp.IsStd" [(ngModel)]="LGrp.IsStd"> <!-- (change)="SetActiveStatus($event)"  -->
+                    <div class="toggle-switch"></div>
+                    <span class="toggle-label"> {{LGrp.IsStd == 1? 'Std' : 'Normal' }}  </span>
+                </label>
+            </div>
+
+            <div class="col50">
+                
+            </div>
+        </div>
+
+        
+
+    </div>
+
+    <div class="footer">
+        <button (click)="SaveLGrp()" > <i class="fa-solid fa-floppy-disk"></i> &nbsp; Save</button>
+        <button (click)="DeleteLGrp()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+    </div>
+</div>

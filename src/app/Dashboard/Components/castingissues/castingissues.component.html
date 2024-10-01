@@ -1,0 +1,110 @@
+<div class="mastersList">
+    <div class="header">
+        <div class="headerLeft">     
+            <i class="fa-solid fa-object-group"></i>   
+            <p class="heading"> &nbsp; Casting Issues</p>        
+        </div>
+
+        <div class="headerRight">
+            <i class="fa-solid fa-file-excel" style="color: green;"></i>
+        </div>
+    </div> 
+
+    <div class="body">
+        
+        <div class="topBar">
+            
+            <div class="barLeft">                                
+                    <!-- <div class="searchBox">
+                        <input type="text" (keyup)="applyFilter($event)" required class="searchControl" />
+                        <label for="" class="searchLabel"> Type here to search </label>                
+                        <div class="rightIcon">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                    </div>     -->
+                    
+                    <div class="searchBox">
+                        <input type="text" class="searchControl" required (keyup)="applyFilter($event)"  />
+                        <label for="" class="searchLabel"> Type here to Search </label>
+                        <div class="rightIcon">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                    </div>
+            </div>
+
+            <div class="barRight">
+                
+                <div class="formGroup">
+                    <input type="date" class="formControl" [ngModel]="FromDate! | intToDate | date:'yyyy-MM-dd'" (blur)="FromDate= DateToInt($event)" />                                                                                                            
+                    <label for="" class="formLabel date"> From Date </label>            
+                </div>
+    
+                <div class="formGroup">
+                    <input type="date" class="formControl" [ngModel]="ToDate! | intToDate | date:'yyyy-MM-dd'" (blur)="ToDate= DateToInt($event)" />                                                                                                            
+                    <label for="" class="formLabel date"> To Date </label>            
+                </div>
+    
+                <button class="btn" (click)="FilterByDate()">Filter Date</button>
+                
+                <button (click)="AddNewTransaction()" ><i class="fa-solid fa-plus"></i> &nbsp; Create New</button>
+            </div>
+        </div> 
+
+        <div class="mat-elevation-z8 tableContainer" #TABLE>
+            <table class="table" mat-table [dataSource]="dataSource" matSort   >
+
+              <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">                       
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>  {{ column=="crud"? '': column.replace("_"," ")}} </th>
+                    
+                  <td mat-cell *matCellDef="let element; let i = index;"
+                  [style.color]="column == 'TransStatus' 
+                                    ? element['TransStatus'] == 0 ? 'red' : 'green' : '#6a7a8c'"                                     
+                  > 
+                    {{ 
+                      column == "Active_Status"  
+                        ? element[column] == 1 
+                          ? "Active" 
+                          : "InActive"                        
+
+                        : column == "#"
+                            ? i+1
+
+                        : (column == "Trans_Date" || column == "Due_Date")
+                        ? (element[column] | intToDate | date:"dd/MM/YYYY")
+
+                        : (column == "NettAmt" )
+                        ? (element[column] | number )
+                        
+                        : (column == "TransStatus" )
+                        ? (element[column] == 0 ? 'Pending' : 'Completed')
+                        
+                      : element[column]                         
+                    }}                     
+
+                    <ng-container *ngIf="column=='crud'" >
+                        <div class="crudIcons">
+                            <i class="fa-solid fa-pen-to-square" style="color: green;" (click)="OpenTransaction(element)" ></i>
+                            &nbsp;
+                            <i class="fa-solid fa-print" style="color: gray;" (click)="PrintTransaction(element)" ></i>
+                            &nbsp;
+                            <i class="fa-solid fa-trash" style="color: rgb(196, 63, 63);" (click)="DeleteItem(element)"  ></i>
+                        </div>
+                        
+                      </ng-container>
+                  </td>            
+                  
+              </ng-container>
+             
+                   
+              <tr mat-header-row *matHeaderRowDef ="columnsToDisplay; sticky: true;"></tr>
+              <tr mat-row *matRowDef="let element; columns: columnsToDisplay;">
+              </tr>
+              
+            </table>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" pageSize = 10 aria-label="Select page of users"></mat-paginator> 
+          </div>
+    </div>
+
+</div>
+
+

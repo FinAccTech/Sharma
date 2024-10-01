@@ -1,0 +1,145 @@
+.stockForm {
+    width: 100%;
+    padding: 1rem;    
+        
+    .header{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 2px solid var(--Color4);
+        padding: 0.75rem 1rem 0 1rem;
+  
+        .headerLeft{
+            display: flex;
+            i{
+                font-size: 24px;
+                color: var(--Color4);
+            }
+  
+            p{
+                font-size: 24px;
+                color: var(--Color6);
+                font-weight: bold;
+            }
+        }
+  
+        .headerRight{
+            p{
+                font-size: 30px;
+                cursor: pointer;
+            }
+            p:hover{
+                transition: transform 0.25s 0s; 
+                transform: scale(1.5); 
+            }
+        }
+    }
+
+    .body{
+        width: 100%;
+        margin-top: 1.5rem;
+        padding: 0 0 0 .5rem;
+    }
+
+    .footer{
+        text-align: right;
+
+        button{
+            padding: .8rem;
+            background-color: var(--Color5);
+            color: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 1rem;
+            
+        }
+    }
+}
+.searchBox{
+    position: relative;
+    height: 48px;  
+    width: 100%;
+    
+    .rightIcon{
+    right: .7rem;
+    top: 12px;
+    position: absolute;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--Color6);
+    z-index: 12;
+    }
+
+    .rightIcon:hover{
+        transition: transform 0.25s 0s; 
+        transform: scale(1.5); 
+    }
+    
+}
+
+.searchControl{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: none;    
+    outline: none;
+    border: none;
+    border-bottom: 1px solid #d8d2d2;
+    padding: 16px;    
+    z-index: 1;
+    overflow: hidden;
+}
+
+.searchLabel{
+      
+    position: absolute;
+    left: 6px;
+    top: 13px;
+    color: #a1a1a1;
+    background-color: #fff;
+    padding: 0 6px;
+    font-size: 1rem;
+    transition: .3s;    
+    white-space: nowrap;
+}
+
+.searchLabel.date{
+    top: -8px;    
+    z-index: 10;
+    font-size: 12px;
+    color: var(--Color6);
+    font-weight: 500;
+}
+
+.searchControl:focus + .searchLabel{
+    top: -8px;    
+    z-index: 10;
+    font-size: 12px;
+    color: var(--Color6);
+    font-weight: 500;
+}
+
+.searchControl:focus{
+    border-bottom: 1.5px solid var(--Color6);
+    transition: 2s ease-out;
+}
+
+.searchControl:not(:focus):valid + label{
+    top: -10px;
+    z-index: 10;
+}
+
+.table{
+    width: 100%;
+    font-weight: bold;
+    font-size: 20px;
+    
+    tr:hover{
+        background-color: lightgray;
+        cursor: pointer;
+    }
+}

@@ -1,0 +1,73 @@
+<div class="modalForm">
+    <div class="header">
+        <div class="headerLeft">
+            <i class="fa-solid fa-object-group"></i>
+            <p> &nbsp; Uom</p>
+        </div>
+        <div class="headerRight">
+            <p mat-dialog-close="" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="row" style="margin-top: 5px;" >
+            <div class="col50">
+                <input type="hidden" required [(ngModel)] = Uom.UomSno  />
+                <div class="formGroup">                    
+                    <input type="text" class="formControlreadonly" disabled="" required [(ngModel)] = Uom.Uom_Code   />
+                    <label for="" class="formLabelreadonly"> Uom Code </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup" [ngClass]="!UomNameValid ? 'invalid' : ''" >
+                    <input type="text" class="formControl" required [(ngModel)] = Uom.Uom_Name  />
+                    <label for="" class="formLabel"> Uom Name </label>
+                    <div class="errorHint" *ngIf="!UomNameValid" > Invalid Name </div>
+                </div>
+            </div>
+        </div> 
+
+        <div class="row" style="margin-top: 15px;" >
+            <div class="col50">                
+                <app-selectionlist [Caption]="'Base Uom'"   [DataSource]="BaseUomsList" [SelectedItem]="SelectedBaseUom"  (newItemEvent)="getBaseUom($event)"></app-selectionlist>                                    
+            </div>
+
+            <div class="col50">
+                <!-- <div class="formGroup">
+                    <input type="number"  class="formControl" [(ngModel)] = "Uom.Base_Qty"  />
+                    <label for="" class="formLabel"> Base Qty </label>                                         
+                </div> -->
+
+                <div class="newTextField">
+                    <label><input type="text" [(ngModel)] = "Uom.Base_Qty"  class="textfield" required><span class="placeholder">Base Qty</span></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px; display: flex; flex-direction: row; align-items: center; text-align: center;">
+            <div class="col50">
+                <label class="toggle">
+                    <input class="toggle-checkbox" type="checkbox" [checked]="Uom.Active_Status" [(ngModel)]="Uom.Active_Status"> <!-- (change)="SetActiveStatus($event)"  -->
+                    <div class="toggle-switch"></div>
+                    <span class="toggle-label"> {{Uom.Active_Status == 1? 'Active' : 'InActive' }}  </span>
+                </label>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">
+                    <input type="text" class="formControl" required [(ngModel)] = Uom.Remarks  />
+                    <label for="" class="formLabel"> Remarks </label>                    
+                </div>
+            </div>
+        </div>
+
+        
+
+    </div>
+
+    <div class="footer">
+        <button (click)="SaveUom()" > <i class="fa-solid fa-floppy-disk"></i> &nbsp; Save</button>
+        <button (click)="DeleteUom()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+    </div>
+</div>

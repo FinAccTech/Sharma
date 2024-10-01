@@ -1,0 +1,255 @@
+<div class="customerForm">
+    <div class="header">
+        <div class="headerLeft">
+            <i class="fa-solid fa-user"></i>
+            <p> Clients </p>
+        </div>
+
+        <div class="headerRight">
+            <p matDialogClose="" > &times; </p>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="basicInfo">
+            <div class="imgArea"> 
+                <input type="file" style="display: none;" onclick="this.value = null" (change)="selectFile($event)" #fileUpload>            
+
+                <div (click)="fileUpload.click()">                    
+                    <ng-container *ngIf="TransImages.length > 0 " >
+                        <img [src]="this.TransImages[0].SrcType == 0 ? this.TransImages[0].Image_File :  this.TransImages[0].Image_Url" />
+                    </ng-container>
+                    <ng-container *ngIf="TransImages.length < 1 "> 
+                        <img src="assets/images/noimage.jpg" />
+                    </ng-container>                    
+                </div>                
+                
+                
+                <div class="buttonsSection">
+                    <div class="buttons">
+                        <i class='bx bxs-webcam bx-tada' style="color: green;" (click)="OpenWebCam()" > </i>
+                        <p>WebCam</p>
+                    </div>
+
+                    <div class="buttons" (click)="fileUpload.click()">
+                        <i class='bx bxs-file-find' style="color: royalblue;"> </i>
+                        <p>Browse</p>
+                    </div>                    
+                    
+                    <div class="buttons" (click)="RemoveProfileImage()" >
+                        <i class='bx bxs-trash' style="color: red;"></i>
+                        <p>Remove</p>
+                    </div>  
+
+                    <div class="buttons" (click)="OpenImagesCreation()">
+                        <i class='bx bx-images' ></i>
+                        <p>More Images</p>
+                    </div>
+                </div>
+            </div>
+   
+            <div class="infoArea">
+                <div class="row">
+                    <div class="col30">
+                        <div class="formGroupsansBorder">
+                            <input type="hidden" [(ngModel)] = Party.PartySno />
+                            <input type="text" class="formControlreadonly" required disabled="" [(ngModel)] = Party.Party_Code />
+                            <label for="" class="formLabelreadonly">Code </label>
+                        </div>
+                    </div>
+
+                    <div class="col70">
+                        <div class="formGroupsansBorder" [ngClass]="!PartyNameValid ? 'invalid' : ''" >
+                            <input type="text" class="formControl" required  [(ngModel)] = Party.Party_Name  maxlength="50" />
+                            <label for="" class="formLabel"> Customer Name </label>
+                            <div class="errorHint" *ngIf="!PartyNameValid" > Invalid Name </div>
+                        </div>
+                    </div>    
+                    
+                </div>
+
+                
+
+                <div class="row" style="margin-top: 15px;" >
+                    <div class="col100">
+                        <div class="formGroupsansBorder">
+                            <!-- <input type="text" class="formControl" required  [(ngModel)] = Party.RelName maxlength="50" />
+                            <label for="" class="formLabel"> Father Name </label> -->
+                            <textarea  class="formControl" placeholder="Address" rows="5" [(ngModel)] = Party.Address></textarea>
+                        </div>
+                    </div>                    
+                </div>
+
+                <div class="row" style="margin-top: 15px;" >
+                    <div class="col70">
+                        <div class="formGroupsansBorder">
+                            <input type="text" class="formControl" required  [(ngModel)] = Party.City maxlength="50"/>
+                            <label for="" class="formLabel"> Suburb </label>
+                        </div>
+                    </div>
+
+                    <div class="col30">
+                        <div class="formGroupsansBorder">
+                            <input type="text" class="formControl" required  [(ngModel)] = Party.Pincode maxlength="10" />
+                            <label for="" class="formLabel"> Post Code </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 15px;" >
+                    <div class="col100">
+                        <div class="formGroupsansBorder">
+                            <input type="text" class="formControl" required  [(ngModel)] = Party.State maxlength="50"/>
+                            <label for="" class="formLabel"> State </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 15px;  margin-bottom: 15px;" > 
+                    <div class="col50">
+                        <div class="formGroupsansBorder" [ngClass]="!MobNumberValid ? 'invalid' : ''">
+                            <input type="text" class="formControl" required  [(ngModel)] = Party.Mobile maxlength="10" />
+                            <label for="" class="formLabel"> Mobile </label>
+                            <div class="errorHint" *ngIf="!MobNumberValid" > Invalid Mobile </div>
+                        </div>
+                    </div>                
+
+                    <div class="col50">
+                        
+                        <div class="matGroup">
+                            <div class="matSelect"> 
+                                <mat-select [(value)]="Party.Party_Type">
+                                    <mat-option [value]="0">Private Client</mat-option>
+                                    <mat-option [value]="1">Business</mat-option>                                    
+                                </mat-select>
+                            </div>
+                            <div class="matLabel">
+                                &nbsp;&nbsp; Client Type
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                
+                
+            </div>
+        </div>
+        <div class="detailedInfo">
+            <mat-tab-group>
+                <mat-tab label="Address Information"> 
+                    <ng-template mat-tab-label>                                        
+                        More Information                  
+                    </ng-template>
+                    <div class="row" style="margin-top: 15px;" >
+                        <div class="col50">
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col50">
+                                    <div class="matGroup">
+                                        <div class="matSelect">                                            
+                                            <mat-select [(value)]="Party.Sex"  >
+                                                <mat-option [value]="1">Male</mat-option>
+                                                <mat-option [value]="2">Female</mat-option>                            
+                                                <mat-option [value]="3">Other</mat-option>                            
+                                            </mat-select>
+                                        </div>
+                                        <div class="matLabel">
+                                            &nbsp;&nbsp; Sex
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col50">
+                                    <div class="formGroup">
+                                        <input type="date" class="formControl" required [ngModel]="Party.Dob! | intToDate | date:'yyyy-MM-dd'" (blur)="Party.Dob = DateToInt($event)" />                    
+                                        <label for="" class="formLabel date"> Date of Birth </label>
+                                    </div>
+                                </div>
+                            </div>                            
+                        </div>
+
+                        <div class="col50">
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="date" class="formControl" [ngModel]="Party.Create_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="Party.Create_Date = DateToInt($event) " />                    
+                                        <label for="" class="formLabel date"> Customer Since </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 15px;">
+                        <div class="col50">
+                            <div class="row">
+                                <div class="col50">
+                                    <div class="formGroup">
+                                        <input type="date" class="formControl" [ngModel]="Party.Issue_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="Party.Issue_Date = DateToInt($event) " />                    
+                                        <label for="" class="formLabel date"> Issue Date </label>
+                                    </div>
+                                </div>
+                                <div class="col50">
+                                    <div class="formGroup">
+                                        <input type="date" class="formControl" [ngModel]="Party.Expiry_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="Party.Expiry_Date = DateToInt($event) " />                    
+                                        <label for="" class="formLabel date"> Expiry Date </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col50">
+                            <div class="formGroup">
+                                <input type="text" class="formControl" required  [(ngModel)] = Party.Email />
+                                <label for="" class="formLabel"> Email </label>
+                            </div>
+                        </div>
+
+                        
+                    </div>
+
+                    <div class="row" style="margin-top: 15px;">
+                        <div class="col50">
+                            <div class="formGroup">
+                                <input type="text" class="formControl" required  [(ngModel)] = Party.Reference maxlength="20"/>
+                                <label for="" class="formLabel"> ID Number </label>
+                            </div>
+                        </div>
+                        <div class="col50">
+                            <div class="formGroup">
+                                <input type="text" class="formControl" required  [(ngModel)] = Party.Gst_Number maxlength="50"/>
+                                <label for="" class="formLabel"> Gst Number </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 15px;">
+                        <div class="col50">
+                            <div class="formGroup">
+                                <input type="text" class="formControl" required  [(ngModel)] = Party.Director_Name maxlength="50"/>
+                                <label for="" class="formLabel"> Director Name </label>                                
+                            </div>
+                        </div>
+                        <div class="col50">
+                            <div class="formGroup">
+                                <input type="text" class="formControl" required  [(ngModel)] = Party.Remarks maxlength="50"/>
+                                <label for="" class="formLabel"> Remarks </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </mat-tab>
+
+            </mat-tab-group>
+        </div>
+        <div class="footer">
+            <button (click)="SaveParty()" > <i class="fa-solid fa-floppy-disk"></i> &nbsp; Save</button>
+            <button (click)="DeleteParty()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+        </div>
+    </div>
+
+
+</div>
+

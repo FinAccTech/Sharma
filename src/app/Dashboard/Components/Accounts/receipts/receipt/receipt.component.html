@@ -1,0 +1,82 @@
+<div class="receiptForm">
+    <div class="header">
+        <div class="headerLeft">
+            <i class="fa-solid fa-object-group"></i>
+            <p> &nbsp; Receipt</p>
+        </div>
+        <div class="headerRight">
+            <p (click)="CloseDialog()" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="row" style="margin-top: 5px;" >
+            <div class="col50">
+                <app-selectionlist [Caption]="'Series'" [DataSource]="SeriesList" [SelectedItem]="Receipt.Series"  (newItemEvent)="getSeries($event)"></app-selectionlist>
+            </div>
+
+            <div class="col50">
+                <div class="row">
+                    <div class="col50">
+                        <input type="hidden" required [(ngModel)] = Receipt.VouSno  />
+                        <div class="formGroup">                    
+                            <input type="text" class="formControlreadonly" disabled="" required [(ngModel)] = Receipt.Vou_No   />
+                            <label for="" class="formLabelreadonly"> Receipt No </label>
+                        </div>
+                    </div>
+                    <div class="col50">
+                        <div class="formGroup">
+                            <input type="date" class="formControl" #recdate [ngModel]="Receipt.VouDate! | intToDate | date:'yyyy-MM-dd'" (ngModelChange)="Receipt.VouDate = DateToInt($event) " />    
+                            
+                            <label for="" class="formLabel"> Receipt Date </label>
+                        </div>        
+                    </div>
+                </div>
+                
+            </div>
+        </div> 
+
+        <div class="row" style="margin-top: 15px;" >
+            <div class="col50">                
+                <app-selectionlist [Caption]="'Ledger'" [DataSource]="LedList" [SelectedItem]="Receipt.Ledger"  (newItemEvent)="getLedger($event)"></app-selectionlist>
+            </div>
+
+            <div class="col50">
+                <div class="row">
+                    <div class="col50">
+                        <div class="formGroup">
+                            <input type="number" class="formControl" required [(ngModel)] = Receipt.Cash_Amount  />
+                            <label for="" class="formLabel"> Cash Amount </label>                    
+                        </div>
+                    </div>
+                    <div class="col50">
+                        <div class="formGroup">
+                            <input type="number" class="formControl" required [(ngModel)] = Receipt.Bank_Amount  />
+                            <label for="" class="formLabel"> EFT Amount </label>                    
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px; display: flex; flex-direction: row; align-items: center; text-align: center;">
+            <div class="col50">
+                <app-selectionlist [Caption]="'Bank A/c'" [DataSource]="BanksList" [SelectedItem]="Receipt.Bank"  (newItemEvent)="getBank($event)"></app-selectionlist>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">
+                    <input type="text" class="formControl" required [(ngModel)] = Receipt.BankDetails  />
+                    <label for="" class="formLabel"> Remarks </label>                    
+                </div>
+            </div>
+        </div>
+      
+    </div>
+
+    <div class="footer">
+        <button (click)="SaveReceipt()" > <i class="fa-solid fa-floppy-disk"></i> &nbsp; Save</button>
+        <button (click)="DeleteReceipt()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+    </div>
+</div>

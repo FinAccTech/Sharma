@@ -1,0 +1,213 @@
+
+<div class="itemContainer"  itemclickOutside (itemclickOutside)="PushGridDetailstoParent()" style="background-color: #fff;">
+
+    <ng-container *ngIf="StockInput" >  
+         
+        <div class="itemHeader">            
+            <div class="stock" [ngClass]="DocConversion === true ? 'disabledDiv':''">
+                <i class="fa fa-archive" (click)="OpenInventory(0)"  aria-hidden="true"></i>
+                <p>Select Item from Inventory</p>
+            </div>                     
+
+            <div *ngIf="VouTypeSno == 10" class="rates">            
+                <input type="number" style="text-align: center;" [(ngModel)]="CommonRate"  /> 
+                <button (click)="UpdateRates()" >Update Rates</button>
+            </div>
+        </div>        
+        
+   </ng-container>
+   
+    <div class="itemDetails">
+
+        <div class="itemsList" *ngFor="let Item of GridList; let i = index" [ngClass]="DisabledDiv === true ? 'disabledDiv':''">
+            
+                <div [ngClass]="SilverWt == true ? 'itemControlsSilver' : 'itemControls' "> 
+
+                    <!-- <div class="sno">
+                        {{i+1}}
+                    </div> -->
+                    <div class="formGroup" >                        
+                        <app-selectionlist [Caption]="'Item Name'" [MasterComponentId]="2" (newMasterEmit)="getNewMaster($event,i)" #itemname  [DataSource]="ItemsList" [SelectedItem]="SelectedItem[i]" (newItemEvent)="getItem($event,i)" > </app-selectionlist>                                                     
+                    </div>
+
+                    <div class="formGroup" >
+                        <input type="number" class="formControlType2" required  [(ngModel)] = "Item.Karat" #karat NumberInput MaxValue=0 CalcValues (blur)="CalcPurity(Item)" (keydown.enter)="purity.focus()" />
+                        <label for="" class="formLabelType2">Karat </label>                                                            
+                    </div> 
+
+                    <div class="formGroup" >
+                        <input type="number" class="formControlType2" required  [(ngModel)] = "Item.PurityPer" #purity NumberInput MaxValue=0 CalcValues (blur)="CalcKarat(Item)" (keydown.enter)="remarks.focus()" />
+                        <label for="" class="formLabelType2">Purity </label>                                                                           
+                    </div> 
+
+                    <div class="formGroup" >                        
+                        <input type="text" class="formControlType2" required [(ngModel)] = "Item.Remarks" #remarks maxlength="100" (keydown.enter)="FocusNext()" (focus)="CalcValues(Item)" />
+                        <label for="" class="formLabelType2"> Item Description </label>
+                    </div>
+                     
+
+                    <ng-container *ngIf="EnableBatch">
+                        <div class="formGroup"  >
+                            <input type="text" style="font-size: 12px;" class="formControlType2" required  [(ngModel)] = "Item.Batch_No" #batchno NumberInput MaxValue=0 CalcValues  (keydown.enter)="grosswt.focus()" />
+                            <label for="" class="formLabelType2">Batch No </label>                                                 
+                        </div> 
+                    </ng-container>
+
+                    <ng-container *ngIf="!StockInput">
+                        <div class="formGroup"  >
+                            <input type="number" class="formControlType2" required  [(ngModel)] = "Item.Qty" #qty NumberInput MaxValue=0 CalcValues  (blur)="SetBatchItems()" (keydown.enter)="grosswt!.focus()" />
+                            <label for="" class="formLabelType2">Qty </label>                                                 
+                        </div> 
+                    </ng-container>
+  
+                    
+                    <div class="formGroup" [ngClass]="Item.BatchSno == 1 ? 'enabledDiv' : 'disabledDiv'">
+                        <input type="number" class="formControlType2" required [(ngModel)] = "Item.GrossWt" #grosswt NumberInput MaxValue=0 Decimals=3 (blur)="CalcValues(Item)" />
+                        <label for="" class="formLabelType2">GrossWt </label>
+                    </div>
+
+                    <ng-container *ngIf="!WastageCol" >
+                        <div class="formGroup" >
+                            <input type="number" class="formControlType2" required [(ngModel)] = "Item.StoneWt"  #stonewt NumberInput MaxValue=0  Decimals=3 (blur)="CalcValues(Item)" (keydown.enter)="nettwt.focus()"/>
+                            <label for="" class="formLabelType2">StoneWt </label>
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="WastageCol" >
+                        <div class="formGroup" >
+                            <input type="number" class="formControlType2" required [(ngModel)] = "Item.Wastage"  #wastage NumberInput MaxValue=0  Decimals=3 (blur)="CalcValues(Item)" (keydown.enter)="nettwt.focus()"/>
+                            <label for="" class="formLabelType2">Melting Loss </label>
+                        </div>
+                    </ng-container>
+
+                    <div class="formGroup" [ngClass]="Item.BatchSno == 1 ? 'enabledDiv' : 'disabledDiv'" >
+                        <input type="number" class="formControlType2" required [(ngModel)] = "Item.NettWt"  #nettwt NumberInput MaxValue=0  Decimals=3 (blur)="CalcValues(Item)" (keydown.enter)="Uom.focus()"/>
+                        <label for="" class="formLabelType2">NettWt </label>
+                    </div>
+
+                    <ng-container *ngIf="SilverWt">                                   
+                        <div class="formGroup" >
+                            <input type="text" class="formControlType2" required [(ngModel)] = "Item.SilverPurity" #silverpurity NumberInput MaxValue=0 maxlength="30" (keydown.enter)="value.focus()" (focus)="CalcValues(Item)" />
+                            <label for="" class="formLabelType2">Silver Purity </label>
+                        </div>  
+                        
+                        <div class="formGroup" >
+                            <input type="text" class="formControlType2" required [(ngModel)] = "Item.SilverWt" #silverwt readonly  NumberInput MaxValue=0 maxlength="30" (keydown.enter)="value.focus()" (focus)="CalcValues(Item)" />
+                            <label for="" class="formLabelType2">Silver Wt </label>
+                        </div>  
+                    </ng-container>
+
+                    <div class="formGroup" >
+                        <app-selectionlist [Caption]="'Uom Name'" [MasterComponentId]="4" (newMasterEmit)="getNewUom($event,i)" #Uom [DataSource]="UomList" [SelectedItem]="SelectedUom[i]"   (newItemEvent)="getUom($event,i)" (blur)="CalcValues(Item)" > </app-selectionlist>                             
+                        
+                    </div> 
+                    
+                    <ng-container *ngIf="!SilverWt" >
+                        <div class="formGroup" [hidden]= DisableAmtCols [ngClass]="Item.BatchSno == 1 ? 'disabledDiv' : 'enabledDiv'">
+                            <input type="text" class="formControlType2" required [(ngModel)] = "Item.Rate" #remarks NumberInput MaxValue=0 maxlength="30" (keydown.enter)="value.focus()" (focus)="CalcValues(Item)" />
+                            <label for="" class="formLabelType2">Rate </label>
+                        </div>  
+                    </ng-container>
+                    
+                    
+                    <div class="formGroup"  [hidden]= DisableAmtCols [ngClass]="Item.BatchSno == 1 ? 'disabledDiv' : 'enabledDiv'" >
+                        <input type="number" class="formControlType2" required [(ngModel)] = "Item.Amount" #value NumberInput MaxValue=0 (keydown.enter)="remarks.focus()" (focus)="CalcValues(Item)" />
+                        <label for="" class="formLabelType2">Amount </label>
+                    </div>
+
+                    <!-- <div class="formGroup">
+                        <input type="text" class="formControlType2" required [(ngModel)] = "Item.Remarks" #remarks NumberInput MaxValue=0 maxlength="30" (focus)="CalcValues(Item)" />
+                        <label for="" class="formLabelType2">Remarks </label>
+                    </div>      
+                     -->
+                    <!-- <ng-container *ngIf="!StockInput && !DisableRowAlter" > -->
+                        <div class="delButton" (click)="RemoveItem(i)" >
+                            <i class="fa-solid fa-trash-can"></i>
+                        </div>   
+                    <!-- </ng-container> -->
+
+                    
+                    <div class="formGroup" [hidden]= true   >
+                        <input type="number" class="formControlType2" required [(ngModel)] = "Item.PureSilverWt"  NumberInput MaxValue=0  Decimals=3 (blur)="CalcValues(Item)" (keydown.enter)="Uom.focus()"/>
+                        <label for="" class="formLabelType2">Pure SilverWt </label>
+                    </div>
+                </div>
+                
+                <ng-container *ngIf="!StockInput" >
+                    <div class="itemControls" style="margin-top: .5rem;" >             
+                        <ng-container *ngIf="ShowPureWt" >
+                            <div class="formGroup">
+                                <input type="number" class="formControlType2" required [(ngModel)] = "Item.PureWt"  NumberInput MaxValue=0  Decimals=3 (blur)="CalcValues(Item)" (keydown.enter)="Uom.focus()"/>
+                                <label for="" class="formLabelType2">PureWt </label>
+                            </div>
+                        </ng-container>
+                               
+                        <ng-container *ngIf="EnableBatchGeneration" >
+                            <div class="formGroup">                        
+                                <input type="text" class="formControlType2" required [(ngModel)] = "Item.BatchItems" #batchitems  (focus)="CalcValues(Item)" />
+                                <label for="" class="formLabelType2">Batch Items </label>
+                            </div>
+                        </ng-container>
+                    </div>
+                </ng-container> 
+                
+                
+        </div>        
+
+        <ng-container *ngIf="!StockInput && !DisableRowAlter" >
+            <div class="addButton" (click)="AddItem()">        
+                <i class="fa-regular fa-plus"></i> 
+                <p> Add Another Item</p>
+            </div>     
+        </ng-container>
+
+    </div> 
+
+    <div class="footer">
+        <div class="footerLeft"> 
+            <button (click)="OpenImagesCreation()" >
+                <i class="fa-regular fa-image"></i> &nbsp;
+                <span>Capture Images</span>
+            </button>
+
+            <div class="imageList">
+                <div class="imageItem" *ngFor="let img of TransImages">
+                    <div *ngIf="img.DelStatus == 0">                                                                        
+                        <img [src]="img.SrcType == 0  ? img.Image_File : img.Image_Url " />                        
+                    </div>   
+                </div>
+            </div>
+        </div>
+        
+        <div class="footerRight">
+            <h1>Total</h1>
+            <div class="formGroup">
+                <input type="text" style="font-weight: bold;" class="formControlreadonly"  required [(ngModel)] = "GridTotals.TotQty" readonly />
+                <label for="" class="formLabelreadonly">Qty </label>
+            </div>
+    
+            <div class="formGroup">
+                <input type="text" style="font-weight: bold;" class="formControlreadonly" required NumberInput MaxValue=0  Decimals=3 [(ngModel)] = "GridTotals.TotGrossWt" readonly/>
+                <label for="" class="formLabelreadonly">GrossWt </label>
+            </div>
+    
+            <div class="formGroup">
+                <input type="text" style="font-weight: bold;" class="formControlreadonly" required NumberInput MaxValue=0  Decimals=3 [(ngModel)] = "GridTotals.TotNettWt"  readonly/>
+                <label for="" class="formLabelreadonly">NettWt </label>
+            </div>
+            
+            <ng-container *ngIf="SilverWt " >
+                <div class="formGroup">
+                    <input type="text" style="font-weight: bold;" class="formControlreadonly" required NumberInput MaxValue=0  Decimals=3 [(ngModel)] = "GridTotals.TotSilverWt"  readonly/>
+                    <label for="" class="formLabelreadonly">SilverWt </label>
+                </div>
+            </ng-container>
+
+            <div class="formGroup" [hidden]= DisableAmtCols>
+                <input type="text" style="font-weight: bold;" class="formControlreadonly" required NumberInput MaxValue=0  Decimals=3 [(ngModel)] = "GridTotals.TotValue" readonly/>
+                <label for="" class="formLabelreadonly">Value </label>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,28 @@
+<div class="pattyContainer" style="background-color: #fff;">    
+    <div class="partyBox">        
+        <div class="leftBox">                
+            <app-selectionlist [Caption]="''" [MasterComponentId]="1" [DataSource]="PartyList" [SelectedItem]="SelectedParty" (newMasterEmit)="getNewMaster($event)"  (newItemEvent)="getParty($event)"></app-selectionlist>
+            <ng-container *ngIf="SelectedParty">
+                <p> Code: {{SelectedParty.Party_Code}} </p>
+                <p> {{SelectedParty.Address}} </p>
+                <p> {{SelectedParty.Mobile}} </p>
+                <p style="font-weight: bold; color: red;" > {{SelectedParty.Remarks}} </p>
+            </ng-container> 
+        </div>
+        <div class="rightBox">
+            <ng-container *ngIf="SelectedParty && SelectedParty.ProfileImage">
+                <img  [src]="SelectedParty.ProfileImage" />
+            </ng-container>                
+
+            <ng-container *ngIf="SelectedParty && SelectedParty.TempImage">
+                <img  [src]="SelectedParty.TempImage" />
+            </ng-container>                
+
+            <ng-container *ngIf="!SelectedParty || !SelectedParty.TempImage">
+                <ng-container *ngIf="!SelectedParty || !SelectedParty.ProfileImage ">
+                    <img  src="assets/images/noimage.jpg" />
+                </ng-container>                
+            </ng-container>
+        </div>
+    </div>
+</div>

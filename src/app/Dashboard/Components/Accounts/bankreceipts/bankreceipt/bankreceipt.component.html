@@ -1,0 +1,83 @@
+<div class="receiptForm">
+    <div class="header">
+        <div class="headerLeft">
+            <i class="fa-solid fa-object-group"></i>
+            <p> &nbsp; BankReceipt</p>
+        </div>
+        <div class="headerRight">
+            <p (click)="CloseDialog()" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="row" style="margin-top: 5px;" >
+            <div class="col50">
+                <app-selectionlist [Caption]="'Series'" [DataSource]="SeriesList" [SelectedItem]="BankReceipt.Series"  (newItemEvent)="getSeries($event)"></app-selectionlist>
+            </div>
+
+            <div class="col50">
+                <div class="row">
+                    <div class="col50">
+                        <input type="hidden" required [(ngModel)] = BankReceipt.VouSno  />
+                        <div class="formGroup">                    
+                            <input type="text" class="formControlreadonly" disabled="" required [(ngModel)] = BankReceipt.Vou_No   />
+                            <label for="" class="formLabelreadonly"> BankReceipt No </label>
+                        </div>
+                    </div>
+                    <div class="col50">
+                        <div class="formGroup">
+                            <input type="date" class="formControl" #recdate [ngModel]="BankReceipt.VouDate! | intToDate | date:'yyyy-MM-dd'" (ngModelChange)="BankReceipt.VouDate = DateToInt($event) " />    
+                            
+                            <label for="" class="formLabel"> BankReceipt Date </label>
+                        </div>        
+                    </div>
+                </div>
+                
+            </div>
+        </div> 
+
+        <div class="row" style="margin-top: 15px;" >
+            <div class="col50">                
+                <!-- <app-selectionlist [Caption]="'Ledger'" [DataSource]="LedList" [SelectedItem]="BankReceipt.Ledger"  (newItemEvent)="getLedger($event)"></app-selectionlist> -->
+                <app-selectionlist [Caption]="'Select Bank A/c'" [DataSource]="BanksList" [SelectedItem]="BankReceipt.Bank"  (newItemEvent)="getBank($event)"></app-selectionlist>
+            </div>
+
+            <div class="col50">
+                <div class="row">
+                    <div class="col100">
+                        <div class="formGroup">
+                            <input type="number" class="formControl" required [(ngModel)] = BankReceipt.Cash_Amount  />
+                            <label for="" class="formLabel"> Cash Amount </label>                    
+                        </div>
+                    </div>
+                    <!-- <div class="col50">
+                        <div class="formGroup">
+                            <input type="number" class="formControl" required [(ngModel)] = BankReceipt.Bank_Amount  />
+                            <label for="" class="formLabel"> EFT Amount </label>                    
+                        </div>
+                    </div> -->
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px; display: flex; flex-direction: row; align-items: center; text-align: center;">
+            <!-- <div class="col50">
+                <app-selectionlist [Caption]="'Bank A/c'" [DataSource]="BanksList" [SelectedItem]="BankReceipt.Bank"  (newItemEvent)="getBank($event)"></app-selectionlist>
+            </div> -->
+
+            <div class="col100">
+                <div class="formGroup">
+                    <input type="text" class="formControl" required [(ngModel)] = BankReceipt.BankDetails  />
+                    <label for="" class="formLabel"> Remarks </label>                    
+                </div>
+            </div>
+        </div>
+      
+    </div>
+
+    <div class="footer">
+        <button (click)="SaveBankReceipt()" > <i class="fa-solid fa-floppy-disk"></i> &nbsp; Save</button>
+        <button (click)="DeleteBankReceipt()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+    </div>
+</div>

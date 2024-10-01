@@ -1,0 +1,106 @@
+<div class="modalForm">
+    <div class="header">
+        <div class="headerLeft">
+            <i class="fa-solid fa-object-group"></i>
+            <p> &nbsp; Item </p>
+        </div>
+        <div class="headerRight">
+            <p mat-dialog-close="" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="row" style="margin-top: 5px;" >
+            <div class="col50">
+                <input type="hidden" required [(ngModel)] = Item.ItemSno  />
+                <div class="formGroup">                    
+                    <input type="text" class="formControlreadonly" disabled="" required [(ngModel)] = Item.Item_Code   />
+                    <label for="" class="formLabelreadonly"> Item Code </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup" [ngClass]="!ItemNameValid ? 'invalid' : ''" >
+                    <input type="text" class="formControl" required [(ngModel)] = Item.Item_Name  />
+                    <label for="" class="formLabel"> Item Name </label>
+                    <div class="errorHint" *ngIf="!ItemNameValid" > Invalid Name </div> 
+                </div>
+            </div>
+        </div>
+
+
+        
+        <div class="osDiv">
+            <h1>Opening Stock</h1>
+            <div class="openstkList" style="margin-top: 15px;">
+                
+                <div class="formGroup">
+                    <input type="number" class="formControl" NumberInput [(ngModel)] = Item.Qty  />
+                    <label for="" class="formLabel"> Qty </label>                    
+                </div>
+            
+                <div class="formGroup">
+                    <app-selectionlist [Caption]="'Uom Name'" [DataSource]="UomList" [SelectedItem]="Item.Uom"  (newItemEvent)="getUom($event)" > </app-selectionlist>     
+                </div>
+                
+                <div class="formGroup">
+                    <input type="number" class="formControl" NumberInput Decimals="3" [(ngModel)] = Item.Karat  />
+                    <label for="" class="formLabel"> Karat</label>                
+                </div>
+
+                <div class="formGroup">
+                    <input type="number" class="formControl" NumberInput Decimals="3" [(ngModel)] = Item.PurityPer  />
+                    <label for="" class="formLabel"> PurityPer</label>                
+                </div>
+
+            </div>
+
+            <div class="openstkList" style="margin-top: 15px;">
+                <div class="formGroup">
+                    <input type="number" class="formControl" NumberInput Decimals="3" [(ngModel)] = Item.Gross_Wt  />
+                    <label for="" class="formLabel"> Gross Wt </label>                    
+                </div>
+            
+            
+                <div class="formGroup">
+                    <input type="number" class="formControl" NumberInput Decimals="3" [(ngModel)] = Item.Stone_Wt  />
+                    <label for="" class="formLabel"> Stone Wt </label>                    
+                </div>
+            
+                <div class="formGroup">
+                    <input type="number" class="formControl"  NumberInput Decimals="3" [(ngModel)] = Item.Nett_Wt  />
+                    <label for="" class="formLabel"> Nett Wt</label>                    
+                </div>          
+                
+                <div class="formGroup">
+                    <input type="number" class="formControl" NumberInput [(ngModel)] = Item.Amount  />
+                    <label for="" class="formLabel"> Nett Amount</label>                    
+                </div>            
+            </div>
+        
+            
+        <div class="row" style="margin-top: 25px;" >
+        
+            <div class="col100">
+                <div class="formGroup">
+                    <input type="text" class="formControl" [(ngModel)] = Item.Remarks  />
+                    <label for="" class="formLabel"> Remarks </label>                    
+                </div>
+            </div>
+
+        </div>
+        </div>
+
+        
+
+        
+
+        
+
+    </div>
+
+    <div class="footer">
+        <button (click)="SaveItem()" > <i class="fa-solid fa-floppy-disk"></i> &nbsp; Save</button>
+        <button (click)="DeleteItem()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+    </div>
+</div>

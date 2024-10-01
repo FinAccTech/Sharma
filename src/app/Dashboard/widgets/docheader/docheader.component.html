@@ -1,0 +1,226 @@
+<ng-container *ngIf="!ProductionDoc" >
+    <div class="docContainer" style="background-color: #fff;" >
+        <div class="headerBox">
+            <div class="row">
+                <div class="col">                 
+                    <div class="row">
+                        <div class="col">
+                            <app-selectionlist [Caption]="'Doc Series'" [DataSource]="SeriesList" [SelectedItem]="SelectedDoc.Series"  (newItemEvent)="getSeries($event)"></app-selectionlist>
+                        </div>
+                        <div class="col">
+                            <div class="formGroup">
+                                <input type="text" style="text-align: center;" class="formControl" required [(ngModel)] = SelectedDoc.Trans_No  [readOnly]="AutoVouNo" (blur)="UpdateChanges()" />
+                                <label for="" class="formLabel"> Doc No </label>                            
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="col"> 
+                    <div class="row">
+                        <div class="col">
+                            <div class="formGroup">                    
+                                <input type="date" class="formControl" (blur)="UpdateChanges()"  [ngModel]="SelectedDoc.Trans_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="SelectedDoc.Trans_Date = DateToInt($event) " />                                                    
+                                <label for="" class="formLabel"> Doc Date </label>                             
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="formGroup">
+                                <input type="date" class="formControl" (blur)="UpdateChanges()" [ngModel]="SelectedDoc.Due_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="SelectedDoc.Due_Date = DateToInt($event) " />                    
+                                <label for="" class="formLabel"> Due Date </label>                            
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div> 
+
+            <div class="row">
+                <div class="col"> 
+                    <app-selectionlist [Caption]="'Reference'" [DataSource]="RefList" [SelectedItem]="SelectedDoc.Reference"  (newItemEvent)="getReference($event)"></app-selectionlist>               
+                </div>
+
+                <ng-container *ngIf="!AvoidCashEftDetails">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col">
+                                <div class="formGroup">
+                                    <input type="number" style="text-align: center;" class="formControl" readonly  NumberInput required [Decimals]="2" [(ngModel)] = SelectedDoc.Cash_Amount  (blur)="UpdateChanges()" />
+                                    <label for="" class="formLabel"> Cash </label>                            
+                                </div>
+                            </div> 
+                            <div class="col">
+                                <div class="formGroup">
+                                    <input type="number" style="text-align: center;" class="formControl" NumberInput [Decimals]="2" required [(ngModel)] = SelectedDoc.Bank_Amount  (blur)="UpdateChanges()" (input)="CalcCashAmount($event)" />
+                                    <label for="" class="formLabel"> EFT Amount </label>                            
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+                </ng-container>
+            </div>
+
+            <ng-container *ngIf="!AvoidCashEftDetails">
+                <div class="row">
+                    <div class="col">
+                        <app-selectionlist [Caption]="'Bank A/c'" [MasterComponentId]="5" (newMasterEmit)="getNewBank($event)" [DataSource]="BanksList" [SelectedItem]="SelectedDoc.Bank"  (newItemEvent)="getBank($event)"></app-selectionlist>
+                    </div>
+                    <div class="col">
+                        <div class="formGroup">
+                            <input type="text" class="formControl" required [(ngModel)] = SelectedDoc.Bank_Details  (blur)="UpdateChanges()" />
+                            <label for="" class="formLabel"> Details </label>                            
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            
+
+        </div>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="ProductionDoc" >
+    <div class="docContainer" style="background-color: #fff;">
+        <div class="headerBox">
+            <div class="row">
+                <div class="col">                 
+                    <div class="row">
+                        <div class="col">
+                            <app-selectionlist [Caption]="'Doc Series'" [DataSource]="SeriesList" [SelectedItem]="SelectedDoc.Series"  (newItemEvent)="getSeries($event)"></app-selectionlist>
+                        </div>
+                        <div class="col">
+                            <div class="formGroup">
+                                <input type="text" style="text-align: center;" class="formControl" required [(ngModel)] = SelectedDoc.Trans_No  [readOnly]="AutoVouNo" (blur)="UpdateChanges()" />
+                                <label for="" class="formLabel"> Doc No </label>                            
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="col"> 
+                    <div class="row">
+                        <div class="col">
+                            <div class="formGroup">                    
+                                <input type="date" class="formControl" (blur)="UpdateChanges()" [ngModel]="SelectedDoc.Trans_Date! | intToDate | date:'yyyy-MM-dd'" (ngModelChange)="SelectedDoc.Trans_Date = DateToInt($event) " />                    
+                                <label for="" class="formLabel"> Doc Date </label>                             
+                            </div>
+                        </div>
+                        <div class="col">
+                            <app-selectionlist [Caption]="'Reference'" [DataSource]="RefList" [SelectedItem]="SelectedDoc.Reference"  (newItemEvent)="getReference($event)"></app-selectionlist>               
+                        </div>
+                    </div> 
+                </div>
+            </div> 
+
+            <ng-container *ngIf="SelectedDoc.Reference.TransSno !== 0" >
+            
+                <div class="row">
+                    <div class="col100 issueDetails">
+                        <!-- <p>Issue Details</p> -->
+                        <div class="issueDetail">
+                            <p class="caption">
+                                Issue No
+                            </p>
+                            <p class="value">
+                                {{Issue_No}}
+                            </p>
+                        </div>
+
+                        <div class="issueDetail">
+                            <p class="caption">
+                                Issue Date
+                            </p>
+                            <p class="value">
+                                {{ Issue_Date ===0 ? '': (Issue_Date  | intToDate | date:"dd/MM/YYYY")}}
+                                
+                            </p>
+                        </div>
+
+                        <div class="issueDetail">
+                            <p class="caption">
+                                Issue Qty
+                            </p>
+                            <p class="value">
+                                {{Issue_Qty}}
+                            </p>
+                        </div>
+
+                        <div class="issueDetail">
+                            <p class="caption">
+                                Issue GrossWt
+                            </p>
+                            <p class="value">
+                                {{Issue_GrossWt}}
+                            </p>
+                        </div>
+                        <!-- <ng-container *ngIf="SelectedDoc.VouTypeSno == 9" > -->
+                            <div class="issueDetail">
+                                <p class="caption">
+                                    Issue NettWt
+                                </p>
+                                <p class="value">
+                                    {{Issue_NettWt}}
+                                </p>
+                            </div>
+                        <!-- </ng-container> -->
+                        
+                    </div>
+                </div>
+
+                <!-- <ng-container *ngIf="SelectedDoc.VouTypeSno == 7 " > -->
+                    <div class="row">
+                        <div class="col100 issueDetails">
+                            <div class="issueDetail">
+                                <p class="caption">
+                                    Issue NettWt
+                                </p>
+                                <p class="value">
+                                    {{Issue_NettWt}}
+                                </p>
+                            </div>
+
+                            <div class="issueDetail">
+                                <p class="caption">
+                                    Tot Amount
+                                </p>
+                                <p class="value">
+                                    {{Issue_Value}}
+                                </p>
+                            </div>
+
+                            <ng-container *ngIf="SelectedDoc.VouTypeSno == 7 ">
+                            <div class="issueDetail">
+                                <p class="caption">
+                                    Pure Wt
+                                </p>
+                                <p class="value">
+                                    {{Issue_PureWt}}
+                                </p>
+                            </div>
+                            
+                            <div class="issueDetail">
+                                <p class="caption">
+                                    Purity
+                                </p>
+                                <p class="value">
+                                    {{Issue_Purity}}
+                                </p>
+                            </div>
+
+                            
+                            <div class="issueDetail">
+                                <p class="caption">
+                                    Silver Wt
+                                </p>
+                                <p class="value">
+                                    {{Expect_Silver}}
+                                </p>
+                            </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </ng-container>
+            <!-- </ng-container> -->
+
+        </div>
+    </div>
+</ng-container>

@@ -1,0 +1,154 @@
+<div class="formContainer">
+    <div class="header">
+        <div class="headerLeft">
+            <i class="fa fa-arrow-circle-left" aria-hidden="true" (click)="GoBack()" ></i>
+            <p class="heading">Jobwork Delivery</p>
+            <p class="edit"> -> Add/Edit</p>
+        </div>
+        <div class="headerRight">
+            <i style="color: green;" (click)="SaveTransaction()" class="fa fa-floppy-o" aria-hidden="true"></i>            
+            <i class="fa fa-print" aria-hidden="true"></i>
+            <i style="color: red;" (click)="DeleteTransaction()" class="fa fa-trash" aria-hidden="true"></i>
+        </div>
+    </div>
+ 
+    <div class="content"> 
+        <div class="docHeader">            
+            <div class="colLeft" [ngClass]="BillDetailsInvalid ? 'errDiv' : ''">                
+                <p style="font-weight: bold; padding: .5rem;" >Bill Details</p>
+                <app-docheader [SelectedDoc]="SelectedDoc"  [NettAmount]="NettAmount" [ProductionDoc]="true"(newDocRef)="getNewReference($event)"  (newDocEvent)="getDocHeader($event)" ></app-docheader>
+                
+            </div>
+
+            <div class="colRight" [ngClass]="PartyInvalid ? 'errDiv' : ''" >
+                <p style="font-weight: bold; padding: .5rem;" >Jobworker Details</p>
+                <app-partycard class="disabledDiv" [SelectedParty]="Transaction.Party" [PartyCat]="3" (newPartyEvent)="getParty($event)"> </app-partycard>
+            </div>
+        </div>
+
+        <div class="docBody" [ngClass]="ItemDetailsInvalid ? 'errDiv' : ''">
+            <!-- <div class="calcDetails">
+                <div class="detLeft">
+                    <div class="details">
+                        <div class="caption" >Received Gold :</div>
+                        <div class="value" >{{(Transaction.TotPureWt)?.toFixed(3)}}</div>
+                    </div>
+
+                    <div class="details">
+                        <div class="caption" >Balance Gold :</div>
+                        <div class="value" *ngIf="SelectedDoc.Reference.TotPureWt && Transaction.TotPureWt" >{{ (SelectedDoc.Reference.TotPureWt - Transaction.TotPureWt).toFixed(3) }}</div>
+                    </div>
+                </div>
+                
+                <div class="detRight">
+
+                    <div class="details">
+                        <div class="caption"> Received Silver :</div>
+                        <div class="value"> {{Transaction.TotSilverWt}} </div>
+                    </div>
+
+                    <div class="details">
+                        <div class="caption"> Balance Silver :</div>
+                        <div class="value" *ngIf="SelectedDoc.Reference.TotSilverWt && Transaction.TotSilverWt" >{{ (SelectedDoc.Reference.TotSilverWt - Transaction.TotSilverWt).toFixed(3) }}</div>
+                    </div>
+                </div>
+
+            </div> -->
+
+            <div class="line1">
+                <p style="font-weight: bold; padding: .5rem;" >Item Details</p>                            
+            </div>
+            
+            <app-itemdetails       
+                                    [DocNo]="SelectedDoc.Trans_No"
+                                    [TransImages]="TransImages"
+                                    (newTransImages)="getGridDetails($event)"
+                                    [GridDataSource]="GridList" 
+                                    (newGridEvent)="getGridDetails($event)"                                    
+                                    [GridTotals]="GridTotals" 
+                                    (newGridTotal)="getGridTotals($event)"                                                                                 
+                                    [VouTypeSno]="18"             
+                                    [EnableBatchGeneration]="false"        
+                                    [DisableAmtCols]="true"                 
+                                    
+                                    >
+            </app-itemdetails>    
+        </div>
+
+        <div class="docFooter">
+            <div class="colLeft">
+                <div class="formGroup">
+                    <input type="text" class="formControl" required [(ngModel)] = Transaction.Remarks   />
+                    <label for="" class="formLabel"> Remarks </label>
+                    <!-- <div class="errorHint" *ngIf="!UomNameValid" > Invalid Name </div> -->
+                </div>
+                <div class="formGroup">
+                    <input type="text" class="formControl" required [(ngModel)] = Transaction.Print_Remarks   />
+                    <label for="" class="formLabel"> Print Remarks </label>                    
+                </div>
+            </div>
+            <div class="colRight">
+                <div class="formGroup" style="display: none;">
+                    <input type="text"  style="font-weight: bold;" class="formControlreadonly" readonly required [(ngModel)] = Transaction.TotAmount   />
+                    <label for="" class="formLabelreadonly"> Total Amount </label>
+                    <!-- <div class="errorHint" *ngIf="!UomNameValid" > Invalid Name </div> -->
+                </div>
+                <div class="formGroup" style="display: none;" >
+                    <input type="text" style="font-weight: bold;" class="formControlreadonly" readonly required [(ngModel)] = Transaction.TaxPer   />
+                    <label for="" class="formLabelreadonly"> Gst % </label>
+                    <!-- <div class="errorHint" *ngIf="!UomNameValid" > Invalid Name </div> -->
+                </div>
+
+                <div class="formGroup" style="display: none;">
+                    <input type="text" style="font-weight: bold;" class="formControlreadonly" readonly required [(ngModel)] = Transaction.TaxAmount   />
+                    <label for="" class="formLabelreadonly"> Gst Amount </label>
+                    <!-- <div class="errorHint" *ngIf="!UomNameValid" > Invalid Name </div> -->
+                </div>
+
+                <div class="formGroup" style="display: none;">
+                    <input type="text" style="font-weight: bold;" class="formControlreadonly" readonly required [(ngModel)] = Transaction.RevAmount   />
+                    <label for="" class="formLabelreadonly"> Reverse Gst </label>
+                    <!-- <div class="errorHint" *ngIf="!UomNameValid" > Invalid Name </div> -->
+                </div>
+
+                <div class="formGroup" style="display: none;"> 
+                    <input type="text" style="font-weight: bold;text-align: center; font-size: 1.5rem;" class="formControlreadonly" readonly required [(ngModel)] = Transaction.NettAmt   />
+                    <label for="" class="formLabelreadonly"> Nett Amount </label>
+                    <!-- <div class="errorHint" *ngIf="!UomNameValid" > Invalid Name </div> -->
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="docFooter">
+            <div class="colLeft">
+
+            </div>
+            <div class="colRight">                
+                <button class="uiBtn" (click)="SaveTransaction()" > <i  class="fa fa-floppy-o" aria-hidden="true"></i>   &nbsp;&nbsp;          Save</button>
+                <button class="uiBtn" (click)="DeleteTransaction()" > <i class="fa fa-trash" aria-hidden="true"></i> &nbsp;&nbsp; Delete</button>
+            </div>
+            
+        </div>
+
+        
+    </div>
+</div>
+<!-- <div class="mastersList">
+    <div class="header">
+        <div class="headerLeft" style="display: flex; align-items: center; justify-content: space-between;" >     
+            <i class="fa-solid fa-object-group"></i>   
+            <p class="heading"> &nbsp; Buying Contracts </p>        
+            <p style="color: green; font-size: 1.2rem;" > &nbsp;&nbsp; -- (New Contract)</p>
+        </div>
+
+        <div class="headerRight">
+            <i class="fa fa-print" aria-hidden="true"></i>
+        </div>
+    </div>  
+</div>
+
+
+<div class="content">
+    <app-partycard> </app-partycard>
+</div> -->

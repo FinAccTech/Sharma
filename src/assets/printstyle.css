@@ -1,0 +1,263 @@
+*{ padding: 0; margin: 0; font-family: Arial, Helvetica, sans-serif; }			
+			.header{
+				width: 100%;
+				height: 18%;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+
+				.title{
+					font-size: 2rem;	
+					font-weight: bold;
+					letter-spacing: .2rem;
+					font-weight: 800;
+				}
+				.titleInfo{
+					width: 100%;
+					height: 100%;
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					justify-content: space-between;
+
+					.titleLeft{
+						text-align: center;
+						margin-left: 1rem;
+						/* width: 30%; */
+					}
+
+					.titleRight{
+						/* width: 70%; */
+						height: 100%;
+						display: flex;
+						flex-direction: row;
+						justify-content: space-around;
+						
+
+						.address{
+							width: 100%;
+							
+							.addressLine{
+								width: 100%;
+								display: flex;
+								flex-direction: row;
+								column-gap: 1rem;
+
+								.iconSection{
+									width: 5%;
+									text-align: center;
+									
+								}
+								.textSection{
+									width: 95%;
+									
+								}
+							}
+						}
+
+						.billInfo{
+							height: 100%;
+							display: flex;
+							flex-direction: column;
+							align-items: flex-start;
+							
+						}
+					}
+				}
+			}
+			.docDetails{
+				height: 3%;
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				justify-content: space-between;
+				p{
+					font-weight: bold;
+				}
+			}
+			.clientDetails{
+				width: 100%;
+				height: 23%;
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				justify-content: space-around;
+
+				.detailsSection{
+					width: 70%;
+					display: flex;
+					flex-direction: column;
+					align-items: flex-start;
+					
+
+					.line{
+						width: 100%;
+						display: flex;
+						flex-direction: row;
+						padding: .1rem;
+						.caption{
+						width: 20%;
+						}
+						.value{
+							width: 80%;
+						}
+					}
+					
+				}
+
+				.idSection{
+					width: 30%;
+				}
+			}
+
+			.itemDetails{
+				height: 27%;
+				border: 1px solid lightgray;
+				
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				position: relative;
+
+				.row{
+					width: 100%;
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					justify-content: space-between;
+					border-bottom: 1px solid lightgray;
+					font-size: 12px;
+
+					.batCol{
+						width: 19%;						
+						text-align: left;			
+						padding: .3rem;		
+						border-right: 1px solid lightgray;
+					}
+
+					.ktCol{
+						width: 5%;						
+						text-align: center;			
+						padding: .3rem;		
+						border-right: 1px solid lightgray;
+					}
+
+					.descCol{
+						width: 31%;
+						border-right: 1px solid lightgray;
+						text-align: center;
+						padding: .3rem;			
+						text-align: left;				
+					}
+
+					.gwtCol{
+						width: 7%;
+						border-right: 1px solid lightgray;
+						text-align: center;			
+						padding: .3rem;		
+						text-align: right;
+					}
+
+					.stCol{
+						width: 5%;
+						border-right: 1px solid lightgray;
+						text-align: center;			
+						padding: .3rem;		
+						text-align: right;
+					}
+
+					.nwtCol{
+						width: 7%;
+						border-right: 1px solid lightgray;
+						text-align: center;			
+						padding: .3rem;		
+						text-align: right;
+					}
+
+					.priceCol{
+						width: 8%;
+						border-right: 1px solid lightgray;
+						text-align: center;			
+						padding: .3rem;		
+						text-align: right;
+					}
+
+					.totCol{
+						width: 10%;
+						border-right: 1px solid lightgray;
+						text-align: center;			
+						padding: .3rem;		
+						text-align: right;
+					}
+
+
+					.btext{
+						font-weight: bold;
+						
+						text-align: center;
+					}
+				}
+				
+				.gridTotal{
+					position: absolute;
+					right: 0;
+					bottom: 0;
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					justify-content: flex-end;
+					padding-right: 1rem;
+					column-gap: 2rem;
+					font-weight: bold;
+				}
+			}
+			
+
+			.footer{
+				height: 25%;
+				width: 100%;
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				margin-top: 1rem;
+				.paymodes{
+					display: flex;
+					flex-direction: row;
+				}
+
+				.lineDesc{
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					justify-content: space-between;
+					width: 100%;
+					margin-bottom: .5rem;
+					p{
+						font-size:1rem ;
+					}
+					.sno{
+						width: 5%;
+					}
+					.desc{
+						width: 95%;
+					}
+				}
+
+				.signs{
+					display: flex;
+					flex-direction: row;
+					width: 100%;
+					align-items: center;
+					justify-content: space-between;
+					padding: 1rem;
+				}
+
+				.copies{
+					display: flex;
+					flex-direction: row;
+					width: 100%;
+					align-items: center;
+					justify-content: space-around;
+					padding: 1rem;
+				}
+			}

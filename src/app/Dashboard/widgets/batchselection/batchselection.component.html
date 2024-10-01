@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="header">
+        <div class="headerLeft">
+            <i class="fa fa-check-square-o" aria-hidden="true"></i>
+            <p>Select the Bills</p>
+        </div>
+        <div class="headerRight">
+            <p mat-dialog-close="" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body" style="height: 400px; overflow-y: auto;" >
+        <table  >
+            <thead>
+                <th></th><th>Bill No</th><th>Bill Date</th><th>Party</th><th>Tot Qty</th><th>Tot GrossWt</th><th>Tot NettWt</th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of batchData; let i = index">                    
+                    <td><mat-checkbox [checked]="item.Selected" (change)="UpdateSelection(item,$event)"></mat-checkbox></td>
+                    <td> {{item.Trans_No}}   </td>
+                    <td> {{item.Trans_Date | intToDate | date:"dd/MM/YYYY" }} </td>
+                    <td> {{item.Party_Name}}  </td>
+                    <td> {{item.TotQty}} </td>
+                    <td> {{item.TotGrossWt}} </td>
+                    <td> {{item.TotNettWt}} </td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </div>
+    <br>
+    <div class="footer">
+        <button (click)="UpdateValues()" ><i class="fa fa-check" aria-hidden="true"></i> &nbsp; Update</button>
+    </div>
+</div>

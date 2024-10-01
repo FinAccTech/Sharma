@@ -1,0 +1,165 @@
+<div class="container">
+
+    <div class="sidenav" > 
+        <ng-container *ngIf="Comp_Logo" > 
+            <div class="logo">                
+                <img [src]="'assets/images/' + Comp_Logo "  />                
+            </div>      
+        </ng-container>
+        
+        <ul>
+            <li *ngFor="let MainItem of TreeData;let i = index" >
+            
+                <div class="sideHeader" (click)="ToggleSubMenu(i);">
+                    <i class="{{MainItem.Icon}}" ></i>
+                    <a> <span > {{MainItem.Caption}} </span> </a>                    
+                    <i *ngIf="Expanded[i]==true" class='bx bx-chevrons-down' style="color: rgb(185, 116, 25);" ></i>                            
+                </div>
+
+                <ng-container *ngIf="Expanded[i] == true"> 
+                    <div class="sideMenu " *ngFor="let SubItem of MainItem.SubMenu">                
+                        <i class="fa-solid fa-angles-right"></i>
+                        <a [routerLink]="[SubItem.RouterLink]" routerLinkActive="'menuActive'" > {{SubItem.Caption}} </a> 
+                    </div>
+                </ng-container>
+
+            </li>
+        </ul>
+
+        <!-- <p class="sideHeader" (click)="Homepage()"> <i (click)="Homepage()" class="fa-solid fa-house"></i> &nbsp; Home</p>
+            <div class="sideMenu">
+                <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="buyingcontracts">Buying Contract</a> 
+            </div>
+            
+            <div class="sideMenu">
+                <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="buyingreceipts">Buying Receipt</a> 
+            </div>
+            
+            <div class="sideMenu">
+                <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="deliverydocs">Delivery Doc</a> 
+            </div> 
+
+            <div class="sideMenu">
+                <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="salesinvoices">Sales Invoice</a> 
+            </div>        
+        
+
+        <p class="sideHeader" ><i class="fa fa-superpowers" aria-hidden="true"></i> &nbsp; Smelting</p>
+        <div class="sideMenu">
+            <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="smeltingissues">Smelting Issue</a> 
+        </div>
+        <div class="sideMenu">
+            <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="smeltingreceipts">Smelting Receipt</a> 
+        </div>
+        
+                
+        
+
+        <p class="sideHeader" ><i class="fa fa-thermometer-full" aria-hidden="true"></i> &nbsp; Refining</p>
+        <div class="sideMenu">
+            <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="refiningissues">Refining Issue</a> 
+        </div>
+        
+        <div class="sideMenu">
+            <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="refiningreceipts">Refining Receipt</a> 
+        </div>
+
+        
+        
+
+        <p class="sideHeader" ><i class="fa fa-stop" aria-hidden="true"></i> &nbsp; Casting</p>
+        <div class="sideMenu">
+            <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="castingissues">Casting Issues</a> 
+        </div>
+
+        <div class="sideMenu">
+            <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="castingreceipts">Casting Receipts</a> 
+        </div>
+        
+
+        
+
+        <p class="sideHeader" ><i class="fa fa-line-chart" aria-hidden="true"></i> &nbsp; Reports</p>
+        <div class="sideMenu">
+            <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="stockreport">Stock Report</a> 
+        </div>
+        <div class="sideMenu">
+            <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="stockregister">Stock Register</a> 
+        </div>
+        
+        <div class="sideMenu">
+            <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="pendingreport/4">Pending DeliveryDocs</a> 
+        </div>
+
+        <div class="sideMenu">
+            <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="pendingreport/1">Pending Smeltings</a> 
+        </div>
+        <div class="sideMenu">
+            <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="pendingreport/2">Pending Refinings</a> 
+        </div>
+        <div class="sideMenu">
+            <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="pendingreport/3">Pending Castings</a> 
+        </div>
+
+        
+
+        <p class="sideHeader" ><i class="fa fa-cubes" aria-hidden="true"></i> &nbsp; Masters</p>
+            <div class="sideMenu">
+                <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="clients">Clients</a> 
+            </div>
+            <div class="sideMenu">
+                <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="items">Items</a> 
+            </div>
+            <div class="sideMenu">
+                <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="uoms">Uoms</a> 
+            </div>
+            
+            <div class="sideMenu">
+                <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="karats">Karats</a> 
+            </div>
+
+            <div class="sideMenu">
+                <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="jobworkers">Job Workers</a> 
+            </div>
+
+            <p class="sideHeader" ><i class="fa fa-cog" aria-hidden="true"></i> &nbsp; Settings</p>
+            <div class="sideMenu">
+                <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="users">Users</a> 
+            </div>
+            <div class="sideMenu">
+                <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="items">Voucher Series</a> 
+            </div>
+            <div class="sideMenu">
+                <i class="fa-solid fa-angles-right"></i> &nbsp; <a routerLink="uoms">Features</a> 
+            </div>
+            
+             -->
+
+    </div> 
+
+    <div class="body">
+       
+        <div class="header">
+            <div class="headerLeft">
+                <i class="fa fa-bars" aria-hidden="true"></i>
+                <p>{{Comp_Name}}</p>
+                <i class="fa fa-pencil" (click)="ListCompanies()"  aria-hidden="true"></i>
+            </div>
+    
+            <div class="headerRight">        
+                <p *ngIf="LoggedUser" style="display: inline;" >  {{LoggedUser.toLocaleUpperCase()}}         </p>
+                <i [matMenuTriggerFor]="userMenu" class="fa-regular fa-user"></i>            
+                <mat-menu #userMenu="matMenu" xPosition="before">
+                    <button mat-menu-item (click)="SignOut()" > <i class="fa-solid fa-right-from-bracket"></i> Sign Out</button>            
+                </mat-menu>                
+            </div>
+            
+        </div>
+
+
+        <div class="content">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>
+

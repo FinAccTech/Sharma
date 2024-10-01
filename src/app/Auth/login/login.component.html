@@ -1,0 +1,40 @@
+<div class="loginContainer">
+    <img src="assets/images/loginbg.jpg" />
+
+    <div class="loginBox">
+        <div class="header">
+            <i  style="font-size: 2rem;" class="fa fa-lock" aria-hidden="true"></i>
+            <h1 style="display: inline;" >Login to Continue</h1>
+        </div>
+        
+        <br>
+        
+        <!-- <input type="text" placeholder="Enter UserName"  [(ngModel)]="UserName" />
+        <br>        
+        <input type="password" placeholder="Enter Password" [(ngModel)]="Password" (keyup.enter)="Login()" />
+        <br>
+        <button class="btn" (click)="Login()" ><b> LOGIN</b> </button> -->
+
+        <div class="formGroup" >
+            <input type="text" class="formControl" required [(ngModel)]="UserName" (keyup.enter)="Login()"/>
+            <label for="" class="formLabel"> UserName </label>            
+        </div>
+        
+        <br>
+
+        <div class="formGroup" >
+            <input type="password" class="formControl" required [(ngModel)]="Password" (keyup.enter)="Login()"  />
+            <label for="" class="formLabel"> Password </label>            
+        </div>
+
+        <br>
+        <ng-container *ngIf="StatusMode" >
+            <div [ngClass]="StatusError === true ? 'error' : 'msg'"  >
+                {{StatusText}}
+            </div>
+        </ng-container>
+        
+        <br>
+        <button class="btn" (click)="Login()" ><b> <i class="fa-solid fa-lock"></i> &nbsp;&nbsp; LOGIN</b> </button> 
+    </div>
+</div>

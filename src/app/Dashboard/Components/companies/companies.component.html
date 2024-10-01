@@ -1,0 +1,14 @@
+<div class="compContainer">
+    <div class="divCompanies">
+        <div class="header">
+            <h1>Select Company from the List</h1>
+        </div>
+        
+        <div *ngFor="let comp of CompList">
+            <p class="item"  (click)="SelectCompany(comp)">{{comp.Comp_Name}}</p>
+        </div>
+    </div>
+    
+</div>
+
+
