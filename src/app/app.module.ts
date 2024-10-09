@@ -98,6 +98,8 @@ import { PurchaseorderComponent } from './Dashboard/Components/purchaseorders/pu
 import { SalesordersComponent } from './Dashboard/Components/salesorders/salesorders.component';
 import { SalesorderComponent } from './Dashboard/Components/salesorders/salesorder/salesorder.component';
 import { SilverstockreportComponent } from './Dashboard/Reports/silverstockreport/silverstockreport.component';
+import { ImagesliderComponent } from './GlobalWidgets/imageslider/imageslider.component';
+import { NgImageSliderModule } from 'ng-image-slider';
 
 
 @NgModule({
@@ -176,6 +178,7 @@ import { SilverstockreportComponent } from './Dashboard/Reports/silverstockrepor
     SalesordersComponent,
     SalesorderComponent,
     SilverstockreportComponent,
+    ImagesliderComponent,
     
   ],
   imports: [
@@ -185,6 +188,7 @@ import { SilverstockreportComponent } from './Dashboard/Reports/silverstockrepor
     FormsModule,
     HttpClientModule,
     WebcamModule,
+    NgImageSliderModule,
 
     MatMenuModule,    
     MatCheckboxModule,

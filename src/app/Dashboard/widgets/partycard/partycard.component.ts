@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/
 import { ClsParties, TypeParties } from '../../Classes/ClsParties';
 import { DataService } from '../../Services/dataservice';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
+import { ImagesliderComponent } from 'src/app/GlobalWidgets/imageslider/imageslider.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @AutoUnsubscribe
 @Component({
@@ -10,15 +12,16 @@ import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
   styleUrls: ['./partycard.component.scss']
 })
 export class PartycardComponent {
-  constructor(private dataService: DataService) {}
+  constructor(private dataService: DataService, private dialog: MatDialog) {}
   PartyList!:      TypeParties[];
-  
+  PartyImages: any [] = [];
+
   @Input() PartyCat!: number;
   @Input() SelectedParty!: TypeParties;
   @Output() newPartyEvent = new EventEmitter<TypeParties>();
  
   ngOnInit(){
-    this.LoadParties();
+    this.LoadParties();    
   }
 
   ngOnChanges(changes: SimpleChanges){         
@@ -32,12 +35,15 @@ export class PartycardComponent {
     pty.getParties(0,this.PartyCat).subscribe(data => {      
       this.PartyList = JSON.parse (data.apiData);         
     });     
-
   }
   
   getParty($event: TypeParties){
     this.SelectedParty = $event;       
     this.newPartyEvent.emit(this.SelectedParty); 
+    let  pty = new ClsParties(this.dataService);
+    pty.getPartyImages(this.SelectedParty.PartySno).subscribe(data=>{
+      this.PartyImages =  JSON.parse(data.apiData);      
+    })
   }
 
   getNewMaster($event: TypeParties){    
@@ -46,5 +52,14 @@ export class PartycardComponent {
     this.newPartyEvent.emit(this.SelectedParty);
   }
   
+  OpenSlider(){
+    const dialogRef = this.dialog.open(ImagesliderComponent, 
+      { 
+        width:"50vw",        
+        data: this.PartyImages , 
+      });
+      
+      dialogRef.disableClose = true;      
+  }
  
 }

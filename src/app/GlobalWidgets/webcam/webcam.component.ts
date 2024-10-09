@@ -12,9 +12,9 @@ import { FileHandle } from 'src/app/Dashboard/Types/file-handle';
 
 export class WebcamComponent  implements AfterViewInit {
 
-  constructor(private sanitizer: DomSanitizer, public dialogRef: MatDialogRef<WebcamComponent>, @Inject(MAT_DIALOG_DATA) public data: FileHandle,    ){
-
-  }
+  constructor(private sanitizer: DomSanitizer, 
+    public dialogRef: MatDialogRef<WebcamComponent>, 
+    @Inject(MAT_DIALOG_DATA) public data: FileHandle,){}
 
   TransImages: FileHandle[] = [];
   WIDTH = 640;

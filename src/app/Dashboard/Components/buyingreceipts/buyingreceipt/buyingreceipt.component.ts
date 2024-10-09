@@ -124,7 +124,7 @@ import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
       this.Transaction.Trans_No = this.SelectedDoc.Trans_No;
       this.Transaction.Trans_Date = this.SelectedDoc.Trans_Date;
       this.Transaction.Due_Date = this.SelectedDoc.Due_Date;
-      this.Transaction.RefSno =   0;//this.SelectedDoc.Reference.RefSno;
+      this.Transaction.RefSno =   this.SelectedDoc.Reference.TransSno;
       this.Transaction.Cash_Amount = this.SelectedDoc.Cash_Amount;
       this.Transaction.Bank_Amount = this.SelectedDoc.Bank_Amount;
       this.Transaction.BankLedSno   = this.SelectedDoc.Bank.LedSno;

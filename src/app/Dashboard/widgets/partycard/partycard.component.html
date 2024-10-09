@@ -7,7 +7,12 @@
                 <p> {{SelectedParty.Address}} </p>
                 <p> {{SelectedParty.Mobile}} </p>
                 <p style="font-weight: bold; color: red;" > {{SelectedParty.Remarks}} </p>
-            </ng-container> 
+                <div style="display: flex; column-gap: 1rem; ">
+                    <div *ngFor="let img of PartyImages" style="cursor: pointer;" (click)="OpenSlider()"  >
+                        <img [src]="img.Image_Url" width="50" height="50" />
+                    </div>
+                </div>
+            </ng-container>  
         </div>
         <div class="rightBox">
             <ng-container *ngIf="SelectedParty && SelectedParty.ProfileImage">

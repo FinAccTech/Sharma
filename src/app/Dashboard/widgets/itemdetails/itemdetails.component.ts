@@ -230,14 +230,17 @@ export class ItemdetailsComponent implements OnInit, OnChanges  {
         this.errorKarat[i]= false;
       }
 
-      if (!this.GridList[i].Amount || this.GridList[i].Amount == 0  ){        
-        //this.globals.SnackBar("error","Invalid Item Details...",1000)
-        this.errorAmt[i]= true;
-        return;         
-      } 
-      else{
-        this.errorAmt[i]= false;
+      if (this.DisableAmtCols == false){
+        if (!this.GridList[i].Amount || this.GridList[i].Amount == 0  ){        
+          //this.globals.SnackBar("error","Invalid Item Details...",1000)
+          this.errorAmt[i]= true;
+          return;         
+        } 
+        else{
+          this.errorAmt[i]= false;
+        }
       }
+      
     }
  
     let item = { "Item": {"ItemSno":0, "Item_Code": '', "Item_Name": '', "Name" : '', "Details" :'' } , "BatchSno":0, "Batch_No":"",  "Qty": this.WastageCol ? 1: 0, "StoneWt": 0, "GrossWt": 0, "Wastage": 0, "NettWt": 0, "SilverWt":0, "SilverPurity":0, "PureWt":0, "PureSilverWt":0,  "Uom":{"UomSno":0, "Uom_Code": "", "Uom_Name": "" }, "Karat":0, "PurityPer" :0, "Rate":0, "Amount": 0, "Remarks": "", "BatchItems" :"" } ;

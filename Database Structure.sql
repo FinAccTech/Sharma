@@ -1171,7 +1171,7 @@ GO
 
 
 
-CREATE PROCEDURE Sp_Party
+ALTER PROCEDURE Sp_Party
 	@PartySno INT,
   @Party_Code VARCHAR(20),
   @Party_Name VARCHAR(50),
@@ -1215,6 +1215,9 @@ BEGIN
                           Issue_Date=ISNULL(@Issue_Date,0), Expiry_Date=ISNULL(@Expiry_Date,0), CompSno=@CompSno, UserSno=@UserSno
 				WHERE PartySno=@PartySno
 				IF @@ERROR <> 0 GOTO CloseNow
+
+        DELETE FROM Image_Details WHERE TransSno=@PartySno AND Image_Grp=1
+        IF @@ERROR <> 0 GOTO CloseNow
 
         UPDATE Ledgers SET Led_Name=@Party_Name WHERE LedSno=@LedSno
         IF @@ERROR <> 0 GOTO CloseNow
@@ -1321,14 +1324,14 @@ RETURNS TABLE
 WITH ENCRYPTION AS
 RETURN
 	  SELECT  Pty.*, Pty.Party_Name as 'Name', Pty.Mobile as 'Details',
-            ProfileImage= CASE WHEN EXISTS(SELECT DetSno FROM Image_Details WHERE TransSno=Pty.PartySno AND Image_Grp=1 AND CompSno=@CompSno) THEN 'http://184.168.125.210/Sharma/data/'+(SELECT TOP 1 Image_Url FROM Image_Details WHERE TransSno=Pty.PartySno AND Image_Grp=1 AND CompSno=@CompSno) ELSE '' END
+            ProfileImage= CASE WHEN EXISTS(SELECT DetSno FROM Image_Details WHERE TransSno=Pty.PartySno AND Image_Grp=1 AND CompSno=@CompSno) THEN 'https://www.finaccsaas.com/Sharma/data/'+(SELECT TOP 1 Image_Url FROM Image_Details WHERE TransSno=Pty.PartySno AND Image_Grp=1 AND CompSno=@CompSno) ELSE '' END
     FROM    Party Pty            
     WHERE   (CompSno=@CompSno) AND (PartySno=@PartySno OR @PartySno = 0) AND (Party_Cat=@Party_Cat OR @Party_Cat=0)
 
 GO
 
 
-CREATE PROCEDURE Sp_Party_Delete
+ALTER PROCEDURE Sp_Party_Delete
 	@PartySno INT
 WITH ENCRYPTION AS
 BEGIN
@@ -1357,8 +1360,13 @@ BEGIN
       DELETE FROM Ledgers WHERE LedSno=@LedSno
       IF @@ERROR <> 0 GOTO CloseNow
 
+      DELETE FROM Image_Details WHERE TransSno=@PartySno AND Image_Grp=1
+      IF @@ERROR <> 0 GOTO CloseNow
+
 			DELETE FROM Party WHERE PartySno=@PartySno
 			IF @@ERROR <> 0 GOTO CloseNow
+
+      
 	COMMIT TRANSACTION
 	RETURN 1
 CloseNow:
@@ -2153,7 +2161,7 @@ RETURN
           (SELECT Ser.*, Ser.Series_Name as 'Name', Ser.Series_Name as 'Details' FROM Voucher_Series Ser WHERE SeriesSno = Trans.SeriesSno FOR JSON PATH) Series_Json,
 
           (SELECT   Pty.*, Pty.Party_Name as 'Name', Pty.Party_Code as 'Details',
-                    ProfileImage= CASE WHEN EXISTS(SELECT DetSno FROM Image_Details WHERE TransSno=Pty.PartySno AND Image_Grp=1 AND CompSno=@CompSno) THEN 'http://184.168.125.210/Sharma/data/'+(SELECT TOP 1 Image_Url FROM Image_Details WHERE TransSno=Pty.PartySno AND Image_Grp=1 AND CompSno=@CompSno) ELSE '' END
+                    ProfileImage= CASE WHEN EXISTS(SELECT DetSno FROM Image_Details WHERE TransSno=Pty.PartySno AND Image_Grp=1 AND CompSno=@CompSno) THEN 'https://www.finaccsaas.com/Sharma/data/'+(SELECT TOP 1 Image_Url FROM Image_Details WHERE TransSno=Pty.PartySno AND Image_Grp=1 AND CompSno=@CompSno) ELSE '' END
            FROM     Party Pty WHERE PartySno = Trans.PartySno FOR JSON PATH) Party_Json,
 
           (SELECT   Det.*,
@@ -2184,7 +2192,7 @@ RETURN
 
            WHERE    Det.TransSno = Trans.TransSno FOR JSON PATH) Items_Json,
 
-          ISNULL((SELECT Img.Image_Name,'' as Image_File, Image_Url='http://184.168.125.210/Sharma/data/' + Img.Image_Url, '1' as SrcType, 0 as DelStatus FROM Image_Details Img WHERE TransSno = Trans.TransSno AND Image_Grp=2 FOR JSON PATH),'') Images_Json,
+          ISNULL((SELECT Img.Image_Name,'' as Image_File, Image_Url='https://www.finaccsaas.com/Sharma/data/' + Img.Image_Url, '1' as SrcType, 0 as DelStatus FROM Image_Details Img WHERE TransSno = Trans.TransSno AND Image_Grp=2 FOR JSON PATH),'') Images_Json,
 
           ISNULL((SELECT Trans_No as 'Name', 'Date: ' + CAST([dbo].IntToDate(Trans_Date) AS VARCHAR) as 'Details', * FROM Transactions WHERE TransSno = Trans.RefSno FOR JSON PATH),'') Ref_Json,
 
