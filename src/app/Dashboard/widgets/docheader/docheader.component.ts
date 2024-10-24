@@ -95,8 +95,9 @@ export class DocheaderComponent {
         break; 
 
       case this.globals.VTypBuyingReceipt:
-      trans.getPendingPurchaseOrders().subscribe(data => {           
-        this.RefList = JSON.parse (data.apiData);                 
+        trans.getPendingPurchaseOrders().subscribe(data => {           
+          console.log(data);
+          this.RefList = JSON.parse (data.apiData);                 
       });
       break; 
 

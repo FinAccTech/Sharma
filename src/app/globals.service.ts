@@ -11,6 +11,7 @@ import { TypeVoucher } from './Dashboard/Classes/ClsVouchers';
 import { TypeTransactions } from './Dashboard/Classes/ClsTransactions';
 import { IntToDatePipe } from './Dashboard/Pipes/int-to-date.pipe';
 import { TypeItemGridTotals } from './Dashboard/Types/TypeItemGridTotals';
+import { ClsParties } from './Dashboard/Classes/ClsParties';
 
 
 @Injectable({
@@ -349,7 +350,7 @@ GenerateVoucherXML(Voucher: TypeVoucher, CashLedSno: number): string {
   return StrVouXml;
 }
 
-PrintVoucher(Trans: TypeTransactions) {  
+PrintVoucher(Trans: TypeTransactions, PartyFileSource: FileHandle[]) {  
   
   let StrHtml ='';  
   StrHtml += '		<div class="header"> ';
@@ -739,7 +740,44 @@ PrintVoucher(Trans: TypeTransactions) {
       }
 
   StrHtml += '		</div> ';  
-  
+
+  StrHtml += '<p style="page-break-before:always">';
+
+      if (Trans.VouTypeSno == this.VTypBuyingContract || Trans.VouTypeSno == this.VTypBuyingReceipt)
+      {
+
+        
+
+          StrHtml += '		<div> ';
+          StrHtml += '<p style="font-weight: 500" > True Copy of My Id. SELF ATTESTED </p>';
+
+          if (PartyFileSource){
+            PartyFileSource.forEach(img=>{
+              StrHtml += '<img src="' + img.Image_Url + '" height="300" width="300" />' ;      
+            })
+          }
+
+          StrHtml += '<br>';
+          StrHtml += '<br>';
+
+          StrHtml += '<p style="font-weight: 500" > Items Sold </p>';
+
+          StrHtml += ' <div style="display: flex; align-items:center; flex-wrap: wrap; column-gap:10px">';  
+            
+          if (Trans.fileSource){
+            Trans.fileSource.forEach(img=>{
+              StrHtml += '<img src="' + img.Image_Url + '" height="300" width="300" />' ;      
+            })
+          }
+          
+          // StrHtml += ' <div>';  
+
+          // StrHtml += ' </div>';  
+          StrHtml += ' </div>';  
+          StrHtml += '		</div> ';
+       
+      }
+
   //return StrHtml;
 
   let popupWin;
@@ -759,6 +797,51 @@ PrintVoucher(Trans: TypeTransactions) {
 
 }
 
+// PrintVoucherBack(Trans: TypeTransactions, PartyFileSource: FileHandle[]){
+
+//   let StrHtml = '		<div> ';
+//   StrHtml += '<p style="font-weight: 500" > True Copy of My Id. SELF ATTESTED </p>';
+
+//   if (PartyFileSource){
+//     PartyFileSource.forEach(img=>{
+//       StrHtml += '<img src="' + img.Image_Url + '" height="300" width="300" />' ;      
+//     })
+//   }
+
+//   StrHtml += '<br>';
+//   StrHtml += '<br>';
+
+//   StrHtml += '<p style="font-weight: 500" > Items Sold </p>';
+
+//   StrHtml += ' <div style="display: flex; align-items:center; flex-wrap: wrap; column-gap:10px">';  
+    
+//   if (Trans.fileSource){
+//     Trans.fileSource.forEach(img=>{
+//       StrHtml += '<img src="' + img.Image_Url + '" height="300" width="300" />' ;      
+//     })
+//   }
+  
+//   // StrHtml += ' <div>';  
+
+//   // StrHtml += ' </div>';  
+//   StrHtml += ' </div>';  
+//   StrHtml += '		</div> ';
+
+//   let popupWin;
+    
+//   popupWin = window.open();
+//   popupWin!.document.open();
+//   popupWin!.document.write(`
+//         <html>
+//           <head>
+//             <link rel="stylesheet" type="text/css" href="https://finaccsaas.com/Sharma/assets/printstyle.css">
+//             <script src="https://kit.fontawesome.com/4a299f63d2.js" crossorigin="anonymous"></script> 
+//           </head>
+//           <body onload="window.print();window.close()">${StrHtml}</body>
+//         </html>`
+//   );
+//   popupWin!.document.close();
+// }
   /* ------------------------------------------For Opening Dialog with Animation----------------------------------------------------
     OpenDialog(enterAnimationDuration: string, exitAnimationDuration: string, DialogType: number, DialogText: string): void {
     this.globals.OpenDialog('500ms', '500ms',3,""); 

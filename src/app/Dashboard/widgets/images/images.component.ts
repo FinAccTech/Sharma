@@ -112,8 +112,7 @@ export class ImagesComponent implements OnInit {
 
   ngOnInit(): void {
   //  this.ClearallImages();    
-    this.TransImages = this.data.img;        
-    console.log (this.TransImages) ;
+    this.TransImages = this.data.img;            
     this.TransImages.forEach((image) => {
       let tImg = [];
       let newData = {} as any;
@@ -125,6 +124,8 @@ export class ImagesComponent implements OnInit {
   }
 
   OpenWebCam(){        
+    //console.log(this.TransImages);
+     
     const dialogRef = this.dialog.open(WebcamComponent, 
       {
         // width:"45vw",
@@ -137,8 +138,12 @@ export class ImagesComponent implements OnInit {
         
         if (result) 
         { 
-            this.TransImages = result;
+          result.forEach((img: FileHandle)=>{
+            this.TransImages.push(img);
+          })
+          //this.TransImages.push(result[0])
         }        
+        
       });      
   } 
 

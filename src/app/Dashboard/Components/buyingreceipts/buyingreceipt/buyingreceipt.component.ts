@@ -176,7 +176,7 @@ import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
           trans.Party = JSON.parse(trans.Party_Json!)[0];    
           Trans.UpdateLockStatus(trans.TransSno).subscribe(data =>{
             if (data.apiData == 1){
-              this.globals.PrintVoucher(trans);    
+              this.globals.PrintVoucher(trans,[]);    
             }          
             else{
               this.globals.ShowAlert(3,"Error updating the Transaction..");

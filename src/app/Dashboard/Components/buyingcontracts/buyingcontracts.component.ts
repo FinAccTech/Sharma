@@ -9,6 +9,8 @@ import { ClsTransactions } from '../../Classes/ClsTransactions';
 import { Router } from '@angular/router';
 import { AutoUnsubscribe } from '../../../auto-unsubscribe.decorator';
 import { ProgressbroadcastService } from '../../Services/progressbroadcast.service';
+import { ClsParties } from '../../Classes/ClsParties';
+import { FileHandle } from '../../Types/file-handle';
 
 
 @Component({
@@ -72,28 +74,62 @@ export class BuyingcontractsComponent {
     this.router.navigate(['dashboard/buyingcontract', JSON.stringify(trans)]);
   } 
 
-  PrintTransaction(trans: TypeTransactions){    
-    let Trans = new ClsTransactions(this.dataService);
-    Trans.getLockStatus(trans.TransSno).subscribe(data =>{
-      if (data.apiData == 1){
-        this.globals.ShowAlert(3,"This Document is already printed and Locked..");
-        return;        
-      }
-      else{
-        trans.Series = JSON.parse(trans.Series_Json!)[0];
-        trans.Party = JSON.parse(trans.Party_Json!)[0];    
-        Trans.UpdateLockStatus(trans.TransSno).subscribe(data =>{
-          if (data.apiData == 1){
-            this.globals.PrintVoucher(trans);    
-          }          
-          else{
-            this.globals.ShowAlert(3,"Error updating the Transaction..");
-        return;        
-          }
-        })        
-      }
-    });    
+  // PrintTransaction(trans: TypeTransactions){    
+  //   trans.Series = JSON.parse(trans.Series_Json!)[0];
+  //   trans.Party = JSON.parse(trans.Party_Json!)[0];    
     
+  //   this.globals.PrintVoucher(trans); 
+  //   // let Trans = new ClsTransactions(this.dataService);
+  //   // Trans.getLockStatus(trans.TransSno).subscribe(data =>{
+  //   //   if (data.apiData == 1){
+  //   //     this.globals.ShowAlert(3,"This Document is already printed and Locked..");
+  //   //     return;        
+  //   //   }
+  //   //   else{
+  //   //     trans.Series = JSON.parse(trans.Series_Json!)[0];
+  //   //     trans.Party = JSON.parse(trans.Party_Json!)[0];    
+  //   //     Trans.UpdateLockStatus(trans.TransSno).subscribe(data =>{
+  //   //       if (data.apiData == 1){
+  //   //         this.globals.PrintVoucher(trans);    
+  //   //       }          
+  //   //       else{
+  //   //         this.globals.ShowAlert(3,"Error updating the Transaction..");
+  //   //     return;        
+  //   //       }
+  //   //     })        
+  //   //   }
+  //   // });        
+  // }
+
+  PrintTransaction(trans: TypeTransactions){
+
+    let Trans = new ClsTransactions(this.dataService);
+      Trans.getLockStatus(trans.TransSno).subscribe(data =>{
+        if (data.apiData == 1){
+          this.globals.ShowAlert(3,"This Document is already printed and Locked..");
+          return;        
+        }
+        else{
+          trans.Series = JSON.parse(trans.Series_Json!)[0];
+          trans.Party = JSON.parse(trans.Party_Json!)[0];    
+          if (trans.Images_Json){ trans.fileSource = JSON.parse(trans.Images_Json); }
+  
+          Trans.UpdateLockStatus(trans.TransSno).subscribe(data =>{
+            if (data.apiData == 1){
+              let pty = new ClsParties(this.dataService);
+              let ptyFileSource: FileHandle[];
+              pty.getPartyImages(trans.Party.PartySno ).subscribe(data =>{                                                
+                ptyFileSource =  JSON.parse (data.apiData);
+                 this.globals.PrintVoucher(trans, ptyFileSource);                
+              });              
+            }          
+            else{
+              this.globals.ShowAlert(3,"Error updating the Transaction..");
+              return;        
+            }
+          })        
+        }
+      });   
   }
 
   DeleteItem(trans: TypeTransactions){

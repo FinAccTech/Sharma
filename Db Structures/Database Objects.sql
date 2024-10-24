@@ -1,13 +1,7 @@
-/*USE MASTER
-DROP DATABASE SHARMA
-CREATE DATABASE Sharma
-*/
 
-USE Sharma
+
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='IntToDate') BEGIN DROP FUNCTION IntToDate END
 GO
-
-
-
 CREATE FUNCTION IntToDate(@IntDate INT)
 RETURNS DATE
 AS
@@ -16,6 +10,8 @@ BEGIN
 END
 GO
 
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='DateToInt') BEGIN DROP FUNCTION DateToInt END
+GO
 CREATE FUNCTION DateToInt(@DateInt DATE)
 RETURNS INT
 AS
@@ -28,6 +24,8 @@ BEGIN
 END
 GO
 
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='PreFillString') BEGIN DROP FUNCTION PreFillString END
+GO
 CREATE FUNCTION [dbo].[PreFillString](@Input INT,@Digit INT)
   RETURNS VARCHAR(20)
 WITH ENCRYPTION
@@ -42,40 +40,9 @@ AS
   END
 GO
 
-CREATE TABLE Users
-(
-	UserSno INT PRIMARY KEY IDENTITY(1,1),
-	UserName VARCHAR(20),
-	Password VARCHAR(10),
-  User_Type TINYINT,
-  Active_Status BIT  
-)
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Sp_User') BEGIN DROP PROCEDURE Sp_User END
 GO
-
-INSERT INTO Users VALUES ('Admin','srini',1,1)
-INSERT INTO Users VALUES ('sharma','sharma',1,1)
-
-INSERT INTO Comp_Rights(UserSno,CompSno,Comp_Right) VALUES (1,1,1)
-INSERT INTO Comp_Rights(UserSno,CompSno,Comp_Right) VALUES (1,2,1)
-
-INSERT INTO Comp_Rights(UserSno,CompSno,Comp_Right) VALUES (2,1,1)
-INSERT INTO Comp_Rights(UserSno,CompSno,Comp_Right) VALUES (2,2,1)
-
-
-
-GO
-
-CREATE TABLE Comp_Rights
-(
-  RightsSno INT PRIMARY KEY IDENTITY(1,1),
-  UserSno INT,
-  CompSno INT,
-  Comp_Right BIT
-)
-GO
-
-ALTER PROCEDURE Sp_User
+CREATE PROCEDURE Sp_User
 	@UserSno INT,
   @UserName VARCHAR(10),
   @Password VARCHAR(20),
@@ -133,7 +100,8 @@ END
 
 GO
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getUsers') BEGIN DROP FUNCTION Udf_getUsers END
+GO
 CREATE FUNCTION Udf_getUsers(@UserSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -149,6 +117,8 @@ RETURN
 
 GO
 
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Sp_User_Delete') BEGIN DROP PROCEDURE Sp_User_Delete END
+GO
 CREATE PROCEDURE Sp_User_Delete
 	@UserSno INT
 WITH ENCRYPTION AS
@@ -180,246 +150,8 @@ END
 GO
 
 
-CREATE TABLE Companies
-(
-	CompSno INT PRIMARY KEY IDENTITY(1,1),
-	Comp_Name VARCHAR(50),
-	Comp_Logo VARCHAR(20),
-	Status TINYINT
-)
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Sp_Voucher_Series') BEGIN DROP PROCEDURE Sp_Voucher_Series END
 GO
-
-INSERT INTO	Companies VALUES ('Sharma Bullion Pty Ltd.','sharmabullion.jpeg',1)
-INSERT INTO	Companies VALUES ('AussieMint','aussiemint.jpeg',1)
-
-GO
-
-
-CREATE TABLE Voucher_Types
-(
-  VouTypeSno INT PRIMARY KEY IDENTITY(1,1),
-  VouType_Name VARCHAR(20),
-  Stock_Type TINYINT,
-  Cash_Type TINYINT
-)
-GO
-
-INSERT INTO Voucher_Types(VouType_Name,Stock_Type,Cash_Type)  VALUES ('Opening Stock',1,0)
-INSERT INTO Voucher_Types(VouType_Name,Stock_Type,Cash_Type)  VALUES ('Buying Contract',1,2)
-INSERT INTO Voucher_Types(VouType_Name,Stock_Type,Cash_Type)  VALUES ('RCTI',1,2)
-INSERT INTO Voucher_Types(VouType_Name,Stock_Type,Cash_Type)  VALUES ('Smelting Issue',2,0)
-INSERT INTO Voucher_Types(VouType_Name,Stock_Type,Cash_Type)  VALUES ('Smelting Receipt',1,0)
-INSERT INTO Voucher_Types(VouType_Name,Stock_Type,Cash_Type)  VALUES ('Refining Issue',2,0)
-INSERT INTO Voucher_Types(VouType_Name,Stock_Type,Cash_Type)  VALUES ('Refining Receipt',1,0)
-INSERT INTO Voucher_Types(VouType_Name,Stock_Type,Cash_Type)  VALUES ('Casting Issue',2,0)
-INSERT INTO Voucher_Types(VouType_Name,Stock_Type,Cash_Type)  VALUES ('Casting Receipt',1,0)
-INSERT INTO Voucher_Types(VouType_Name,Stock_Type,Cash_Type)  VALUES ('Sales Invoice',2,1)
-INSERT INTO Voucher_Types(VouType_Name,Stock_Type,Cash_Type)  VALUES ('Delivery Doc',2,0)
-
-INSERT INTO Voucher_Types(VouType_Name,Stock_Type,Cash_Type)  VALUES ('Opening Cash',0,1)
-INSERT INTO Voucher_Types(VouType_Name,Stock_Type,Cash_Type)  VALUES ('PAYMENT',0,2)
-INSERT INTO Voucher_Types(VouType_Name,Stock_Type,Cash_Type)  VALUES ('RECEIPT',0,1)
-INSERT INTO Voucher_Types(VouType_Name,Stock_Type,Cash_Type)  VALUES ('BANK PAYMENT',0,2)
-INSERT INTO Voucher_Types(VouType_Name,Stock_Type,Cash_Type)  VALUES ('BANK RECEIPT',0,1)
-
-INSERT INTO Voucher_Types(VouType_Name,Stock_Type,Cash_Type)  VALUES ('Jobwork Inward',0,0)
-INSERT INTO Voucher_Types(VouType_Name,Stock_Type,Cash_Type)  VALUES ('JobWork Delivery',0,0)
-
-INSERT INTO Voucher_Types(VouType_Name,Stock_Type,Cash_Type)  VALUES ('Purchase Order',0,2)
-INSERT INTO Voucher_Types(VouType_Name,Stock_Type,Cash_Type)  VALUES ('Sales Order',0,1)
-
-GO
-
-CREATE TABLE Voucher_Series
-(
-  SeriesSno       INT PRIMARY KEY IDENTITY(1,1),
-  VouTypeSno      INT,
-  Series_Name     VARCHAR(20),  
-  Num_Method      TINYINT,
-  Allow_Duplicate BIT,
-  Start_No        INT,
-  Current_No      INT,
-  Prefix          CHAR(4),
-  Suffix          CHAR(3),
-  Width           TINYINT,
-  Prefill         VARCHAR(1),
-  Print_Voucher   BIT,
-  Print_On_Save   BIT,
-  Show_Preview    BIT,
-  Print_Style     VARCHAR(100),
-  IsDefault       BIT,
-  Active_Status   BIT,
-  Create_Date     INT,  
-  CompSno         INT  
-)
-GO
-
-
-INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (1,'Opening Stock',1,0,1,0,'OPS','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),1)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (2,'Buying Contract',1,0,1,0,'BC','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),1)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (3,'RCTI',1,0,1,0,'BR','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),1)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (4,'Smelting Issue',1,0,1,0,'SI','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),1)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (5,'Smelting Receipt',1,0,1,0,'SR','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),1)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (6,'Refining Issue',1,0,1,0,'RI','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),1)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (7,'Refining Receipt',1,0,1,0,'RR','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),1)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (8,'Casting Issue',1,0,1,0,'CI','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),1)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (9,'Casting Receipt',1,0,1,0,'CR','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),1)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (10,'Sales Invoice',1,0,1,0,'SAL','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),1)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (11,'Delivery Doc',1,0,1,0,'DOC','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),1)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (12,'Opening Cash',1,0,1,0,'OPC','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),1)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (13,'Payment',1,0,1,0,'PMT','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),1)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (14,'RECEIPT',1,0,1,0,'REC','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),1)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (15,'Bank Payment',1,0,1,0,'BKT','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),1)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (16,'Bank Receipt',1,0,1,0,'BKR','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),1)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (17,'Jobwork Inward',1,0,1,0,'JI','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),1)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (18,'Jobwork Delivery',1,0,1,0,'JR','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),1)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (19,'Purchase Order',1,0,1,0,'PO','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),1)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (20,'Sales Order',1,0,1,0,'SO','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),1)
-GO
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (1,'Buying Contract',1,0,1,0,'BC','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),2)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (2,'Buying Contract',1,0,1,0,'BC','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),2)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (3,'RCTI',1,0,1,0,'BR','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),2)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (4,'Smelting Issue',1,0,1,0,'SI','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),2)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (5,'Smelting Receipt',1,0,1,0,'SR','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),2)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (6,'Refining Issue',1,0,1,0,'RI','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),2)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (7,'Refining Receipt',1,0,1,0,'RR','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),2)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (8,'Casting Issue',1,0,1,0,'CI','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),2)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (9,'Casting Receipt',1,0,1,0,'CR','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),2)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (10,'Sales Invoice',1,0,1,0,'SAL','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),2)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (11,'Delivery Doc',1,0,1,0,'DOC','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),2)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (12,'Opening Cash',1,0,1,0,'OPC','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),2)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (13,'Payment',1,0,1,0,'PMT','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),2)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (14,'RECEIPT',1,0,1,0,'REC','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),2)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (15,'Bank Payment',1,0,1,0,'BKT','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),2)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (16,'Bank Receipt',1,0,1,0,'BKR','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),2)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (17,'Jobwork Inward',1,0,1,0,'JI','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),2)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (18,'Jobwork Delivery',1,0,1,0,'JR','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),2)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (19,'Purchase Order',1,0,1,0,'PO','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),2)
-
-  INSERT INTO Voucher_Series(VouTypeSno, Series_Name, Num_Method, Allow_Duplicate, Start_No,  Current_No, Prefix, Suffix, Width, Prefill, Print_Voucher, 
-  Print_On_Save, Show_Preview, Print_Style, IsDefault,  Active_Status, Create_Date, CompSno)
-  VALUES (20,'Sales Order',1,0,1,0,'SO','',4,'0',0,0,0,0,1,1,dbo.DateToInt(GETDATE()),2)
-
-  
-GO
-
 CREATE PROCEDURE Sp_Voucher_Series
 	@SeriesSno          INT,
   @VouTypeSno         INT,
@@ -480,6 +212,8 @@ END
 
 GO
 
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getVoucherSeries') BEGIN DROP FUNCTION Udf_getVoucherSeries END
+GO
 CREATE FUNCTION Udf_getVoucherSeries(@SeriesSno INT, @VouTypeSno INT, @CompSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -490,7 +224,8 @@ RETURN
 
 GO
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Sp_Voucher_Series_Delete') BEGIN DROP PROCEDURE Sp_Voucher_Series_Delete END
+GO
 CREATE PROCEDURE Sp_Voucher_Series_Delete
 	@SeriesSno INT
 WITH ENCRYPTION AS
@@ -523,7 +258,8 @@ CloseNow:
 END
 GO
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='GenerateVoucherNo') BEGIN DROP FUNCTION GenerateVoucherNo END
+GO
 CREATE FUNCTION [dbo].[GenerateVoucherNo](@SeriesSno INT)
         RETURNS VARCHAR(20)
         WITH ENCRYPTION AS 
@@ -560,41 +296,10 @@ CREATE FUNCTION [dbo].[GenerateVoucherNo](@SeriesSno INT)
         END
   GO
    
-CREATE TABLE Transaction_Setup
-(
-  SetupSno            INT IDENTITY(1,1),  
-  CompSno             INT,
-  PartyCode_AutoGen   BIT,
-  PartyCode_Prefix    CHAR(4),
-  PartyCode_CurrentNo INT,
 
-  UomCode_AutoGen     BIT,
-  UomCode_Prefix      CHAR(4),
-  UomCode_CurrentNo   INT,
 
-  ItemCode_AutoGen    BIT,
-  ItemCode_Prefix     CHAR(4),
-  ItemCode_CurrentNo  INT  
-)
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Sp_Transaction_Setup') BEGIN DROP PROCEDURE Sp_Transaction_Setup END
 GO
-
--------------------INSERTING DEFAULT VALUES FOR TRANSACTION SETUP ---------------------
-INSERT INTO Transaction_Setup(CompSno,
-                                  PartyCode_AutoGen, PartyCode_Prefix, PartyCode_CurrentNo,
-                                  UomCode_AutoGen, UomCode_Prefix,  UomCode_CurrentNo,
-                                  ItemCode_AutoGen, ItemCode_Prefix,  ItemCode_CurrentNo                                  
-                             )
-VALUES (1,1,'C',0, 1, 'U', 0, 1,'I', 0)
-GO
-INSERT INTO Transaction_Setup(CompSno,
-                                  PartyCode_AutoGen, PartyCode_Prefix, PartyCode_CurrentNo,
-                                  UomCode_AutoGen, UomCode_Prefix,  UomCode_CurrentNo,
-                                  ItemCode_AutoGen, ItemCode_Prefix,  ItemCode_CurrentNo                                
-                             )
-VALUES (2,1,'C',0, 1, 'U', 0, 1, 'I', 0)
-GO
-
-
 CREATE PROCEDURE Sp_Transaction_Setup
 	@SetupSno             INT,  
   @PartyCode_AutoGen    BIT,
@@ -632,7 +337,8 @@ END
 
 GO
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getTransaction_Setup') BEGIN DROP FUNCTION Udf_getTransaction_Setup END
+GO
 CREATE FUNCTION Udf_getTransaction_Setup(@SetupSno INT, @CompSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -643,34 +349,8 @@ RETURN
 
 GO
 
-
-CREATE TABLE Ledger_Groups
-(
-  GrpSno    INT PRIMARY KEY IDENTITY(1,1),
-  Grp_Name  VARCHAR(50),
-  Remarks   VARCHAR(50),
-  IsStd     BIT,
-  CompSno   INT,
-  UserSno   INT
-)
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Sp_Ledger_Groups') BEGIN DROP PROCEDURE Sp_Ledger_Groups END
 GO
-
-
-
-INSERT INTO Ledger_Groups (Grp_Name, Remarks, IsStd, CompSno, UserSno) VALUES ('CASH','',1,1,1)
-INSERT INTO Ledger_Groups (Grp_Name, Remarks, IsStd, CompSno, UserSno) VALUES ('Bank Accounts','',1,1,1)
-INSERT INTO Ledger_Groups (Grp_Name, Remarks, IsStd, CompSno, UserSno) VALUES ('Customers','',1,1,1)
-INSERT INTO Ledger_Groups (Grp_Name, Remarks, IsStd, CompSno, UserSno) VALUES ('Suppliers','',1,1,1)
-INSERT INTO Ledger_Groups (Grp_Name, Remarks, IsStd, CompSno, UserSno) VALUES ('Expenses','',1,1,1)
-GO
-
-INSERT INTO Ledger_Groups (Grp_Name, Remarks, IsStd, CompSno, UserSno) VALUES ('CASH','',1,2,1)
-INSERT INTO Ledger_Groups (Grp_Name, Remarks, IsStd, CompSno, UserSno) VALUES ('Bank Accounts','',1,2,1)
-INSERT INTO Ledger_Groups (Grp_Name, Remarks, IsStd, CompSno, UserSno) VALUES ('Customers','',1,2,1)
-INSERT INTO Ledger_Groups (Grp_Name, Remarks, IsStd, CompSno, UserSno) VALUES ('Suppliers','',1,2,1)
-INSERT INTO Ledger_Groups (Grp_Name, Remarks, IsStd, CompSno, UserSno) VALUES ('Expenses','',1,2,1)
-GO
-
 CREATE PROCEDURE Sp_Ledger_Groups
 	@GrpSno    INT,
   @Grp_Name  VARCHAR(50),
@@ -724,7 +404,8 @@ END
 
 GO
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getLedger_Groups') BEGIN DROP FUNCTION Udf_getLedger_Groups END
+GO
 CREATE FUNCTION Udf_getLedger_Groups(@GrpSno INT,@CompSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -736,7 +417,8 @@ RETURN
 
 GO
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Sp_Ledger_Group_Delete') BEGIN DROP PROCEDURE Sp_Ledger_Group_Delete END
+GO
 CREATE PROCEDURE Sp_Ledger_Group_Delete
 	@GrpSno INT
 WITH ENCRYPTION AS
@@ -769,26 +451,8 @@ END
 GO
 
 
-CREATE TABLE Ledgers
-(
-  LedSno        INT PRIMARY KEY IDENTITY(1,1),
-  Led_Name      VARCHAR(50),
-  GrpSno        INT,
-  IsStd         BIT,
-  Open_Balance  MONEY,
-  Remarks       VARCHAR(50),
-  CompSno       INT,
-  UserSno       INT
-)
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Sp_Ledgers') BEGIN DROP PROCEDURE Sp_Ledgers END
 GO
-
-INSERT INTO Ledgers (Led_Name, GrpSno, IsStd, Open_Balance, Remarks, CompSno, UserSno) VALUES ('Cash A/c', 1, 1, 0, '', 1, 1)
-GO
-INSERT INTO Ledgers (Led_Name, GrpSno, IsStd, Open_Balance, Remarks, CompSno, UserSno) VALUES ('Cash A/c', 1, 1, 0, '', 2, 1)
-GO
-
-
-
 CREATE PROCEDURE Sp_Ledgers
 	@LedSno    INT,
   @Led_Name      VARCHAR(50),
@@ -867,7 +531,8 @@ END
 
 GO
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getLedgers') BEGIN DROP FUNCTION Udf_getLedgers END
+GO
 CREATE FUNCTION Udf_getLedgers(@LedSno INT, @GrpSno INT, @CompSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -880,7 +545,8 @@ RETURN
 
 GO
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Sp_Ledger_Delete') BEGIN DROP PROCEDURE Sp_Ledger_Delete END
+GO
 CREATE PROCEDURE Sp_Ledger_Delete
 	@LedSno INT
 WITH ENCRYPTION AS
@@ -918,36 +584,10 @@ END
 
 GO
 
-CREATE TABLE Vouchers
-(
-  VouSno        INT PRIMARY KEY IDENTITY(1,1),
-  Vou_No        VARCHAR(20),
-  VouTypeSno    INT,
-  SeriesSno     INT,
-  VouDate       INT,  
-  Remarks       VARCHAR(50),
-  LedSno        INT,
-  Cash_Amount   MONEY,
-  Bank_Amount   MONEY,
-  BankLedSno    INT,
-  BankDetails   VARCHAR(50),
-  CompSno       INT,
-  UserSno       INT
-)
-GO
 
-CREATE TABLE Voucher_Details
-(
-  DetSno  INT PRIMARY KEY IDENTITY(1,1),
-  VouSno  INT,  
-  LedSno  INT,
-  Debit   MONEY,
-  Credit  MONEY,
-  Remarks VARCHAR(20)
-)
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Sp_Voucher') BEGIN DROP PROCEDURE Sp_Voucher END
 GO
-
-ALTER PROCEDURE Sp_Voucher
+CREATE PROCEDURE Sp_Voucher
 	@VouSno             INT,
   @Vou_No             VARCHAR(20),
   @VouTypeSno         INT,
@@ -1081,7 +721,8 @@ END
 GO
 
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getVouchers') BEGIN DROP FUNCTION Udf_getVouchers END
+GO
 CREATE FUNCTION Udf_getVouchers(@VouSno INT, @VouTypeSno INT, @SeriesSno INT, @CompSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -1102,7 +743,8 @@ GO
 
 
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Sp_Voucher_Delete') BEGIN DROP PROCEDURE Sp_Voucher_Delete END
+GO
 CREATE PROCEDURE Sp_Voucher_Delete
 	@VouSno INT
 WITH ENCRYPTION AS
@@ -1126,52 +768,10 @@ END
 GO
 
 
-CREATE TABLE  Image_Details
-(
-  DetSno INT PRIMARY KEY IDENTITY(1,1),
-  TransSno    INT,
-  Image_Grp   TINYINT,   /* 1- Party Images 2-Other Images */
-  Image_Name  VARCHAR(50),
-  Image_Url   VARCHAR(100),
-  CompSno     INT
-)
+
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Sp_Party') BEGIN DROP PROCEDURE Sp_Party END
 GO
-
-
-CREATE TABLE Party
-(
-  PartySno INT PRIMARY KEY IDENTITY(1,1),
-  Party_Code VARCHAR(20),
-  Party_Name VARCHAR(50),
-  Party_Cat TINYINT,
-  Party_Type TINYINT,
-  Address VARCHAR(200),
-  Mobile VARCHAR(20),
-  City VARCHAR(50),
-  State VARCHAR(50),
-  Pincode VARCHAR(20),
-  Sex TINYINT,
-  Dob INT,
-  Reference VARCHAR(50),
-  Create_Date INT,
-  Email VARCHAR(50),
-  Remarks VARCHAR(100),
-  Active_Status TINYINT,
-  Reg_Number VARCHAR(20),
-  Gst_Number VARCHAR(50),
-  Director_Name VARCHAR(30),
-  Issue_Date INT,
-  Expiry_Date INT,  
-  CompSno INT,
-  UserSno INT,
-  LedSno INT
-)
-
-GO
-
-
-
-ALTER PROCEDURE Sp_Party
+CREATE PROCEDURE Sp_Party
 	@PartySno INT,
   @Party_Code VARCHAR(20),
   @Party_Name VARCHAR(50),
@@ -1318,20 +918,22 @@ GO
 
 
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getParties') BEGIN DROP FUNCTION Udf_getParties END
+GO
 CREATE FUNCTION Udf_getParties(@PartySno INT, @Party_Cat TINYINT,@CompSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
 RETURN
 	  SELECT  Pty.*, Pty.Party_Name as 'Name', Pty.Mobile as 'Details',
-            ProfileImage= CASE WHEN EXISTS(SELECT DetSno FROM Image_Details WHERE TransSno=Pty.PartySno AND Image_Grp=1 AND CompSno=@CompSno) THEN 'https://www.finaccsaas.com/Sharma/data/'+(SELECT TOP 1 Image_Url FROM Image_Details WHERE TransSno=Pty.PartySno AND Image_Grp=1 AND CompSno=@CompSno) ELSE '' END
+            ProfileImage= CASE WHEN EXISTS(SELECT DetSno FROM Image_Details WHERE TransSno=Pty.PartySno AND Image_Grp=1 AND CompSno=@CompSno) THEN 'https://finaccsaas.com/Sharma/data/'+(SELECT TOP 1 Image_Url FROM Image_Details WHERE TransSno=Pty.PartySno AND Image_Grp=1 AND CompSno=@CompSno) ELSE '' END
     FROM    Party Pty            
     WHERE   (CompSno=@CompSno) AND (PartySno=@PartySno OR @PartySno = 0) AND (Party_Cat=@Party_Cat OR @Party_Cat=0)
 
 GO
 
-
-ALTER PROCEDURE Sp_Party_Delete
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Sp_Party_Delete') BEGIN DROP PROCEDURE Sp_Party_Delete END
+GO
+CREATE PROCEDURE Sp_Party_Delete
 	@PartySno INT
 WITH ENCRYPTION AS
 BEGIN
@@ -1377,27 +979,8 @@ END
 GO
 
 
-CREATE TABLE Uoms
-(
-  UomSno INT PRIMARY KEY IDENTITY(1,1),
-  Uom_Code VARCHAR(10),
-  Uom_Name VARCHAR(20),   -- Box
-  Remarks VARCHAR(50),
-  Active_Status     BIT,
-  BaseUomSno INT,         -- Nos
-  Base_Qty FLOAT,          -- 50,
-  CompSno INT
-)
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Sp_Uom') BEGIN DROP PROCEDURE Sp_Uom END
 GO
-
-INSERT INTO Uoms (Uom_Code, Uom_Name, Remarks, Active_Status, BaseUomSno, Base_Qty,CompSno) VALUES ('U1', 'Grams','',1,0,0,1 )
-INSERT INTO Uoms (Uom_Code, Uom_Name, Remarks, Active_Status, BaseUomSno, Base_Qty,CompSno) VALUES ('U2', 'Ounce','',1,1,31.1,1 )
-
-INSERT INTO Uoms (Uom_Code, Uom_Name, Remarks, Active_Status, BaseUomSno, Base_Qty,CompSno) VALUES ('U1', 'Grams','',1,0,0,2 )
-INSERT INTO Uoms (Uom_Code, Uom_Name, Remarks, Active_Status, BaseUomSno, Base_Qty,CompSno) VALUES ('U2', 'Ounce','',1,1,31.1,2 )
-GO
-
-
 CREATE PROCEDURE Sp_Uom
 	@UomSno INT,
   @Uom_Code VARCHAR(10),
@@ -1461,7 +1044,8 @@ END
 
 GO
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getUoms') BEGIN DROP FUNCTION Udf_getUoms END
+GO
 CREATE FUNCTION Udf_getUoms(@UomSno INT,@CompSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -1474,7 +1058,8 @@ RETURN
 
 GO
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Sp_Uoms_Delete') BEGIN DROP PROCEDURE Sp_Uoms_Delete END
+GO
 CREATE PROCEDURE Sp_Uoms_Delete
 	@UomSno INT
 WITH ENCRYPTION AS
@@ -1503,46 +1088,9 @@ END
 
 GO
 
-CREATE TABLE Item_Groups
-(
-  GrpSno INT PRIMARY KEY IDENTITY(1,1),
-  Grp_Code VARCHAR(10),
-  Grp_Name VARCHAR(20)
-)
+
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Sp_Item') BEGIN DROP PROCEDURE Sp_Item END
 GO
-
-INSERT INTO Item_Groups VALUES ('AU','GOLD')
-INSERT INTO Item_Groups VALUES ('AG','SILVER')
-GO
-
-
-CREATE TABLE Items
-(
-  ItemSno INT PRIMARY KEY IDENTITY(1,1),
-  Item_Code VARCHAR(10),
-  Item_Name VARCHAR(20),
-  GrpSno INT,
-  Remarks VARCHAR(50),  
-  CompSno INT,
-  OpenSno INT
-)
-GO
-
-
-INSERT INTO Items(Item_Code, Item_Name, Remarks, CompSno, OpenSno,GrpSno) VALUES ('I1','AU','Gold',1,0,1)
-INSERT INTO Items(Item_Code, Item_Name, Remarks, CompSno, OpenSno,GrpSno) VALUES ('I2','AG','Silver',1,0,2)
-INSERT INTO Items(Item_Code, Item_Name, Remarks, CompSno, OpenSno,GrpSno) VALUES ('I3','Sample Item','Sample',1,0,1)
-
-INSERT INTO Items(Item_Code, Item_Name, Remarks, CompSno, OpenSno,GrpSno) VALUES ('I1','AU','Gold',2,0,1)
-INSERT INTO Items(Item_Code, Item_Name, Remarks, CompSno, OpenSno,GrpSno) VALUES ('I2','AG','Silver',2,0,2)
-INSERT INTO Items(Item_Code, Item_Name, Remarks, CompSno, OpenSno,GrpSno) VALUES ('I3','Sample Item','Sample',2,0,1)
-
-INSERT INTO Items(Item_Code, Item_Name, Remarks, CompSno, OpenSno,GrpSno) VALUES ('I4','Left Over Gold','Left Over Gold',1,0,1)
-INSERT INTO Items(Item_Code, Item_Name, Remarks, CompSno, OpenSno,GrpSno) VALUES ('I4','Left Over Gold','Left Over Gold',2,0,1)
-
-
-GO
-
 CREATE PROCEDURE Sp_Item
 	@ItemSno INT,
   @Item_Code VARCHAR(10),
@@ -1633,7 +1181,8 @@ END
 
 GO
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Sp_Item_Delete') BEGIN DROP PROCEDURE Sp_Item_Delete END
+GO
 CREATE PROCEDURE Sp_Item_Delete
 	@ItemSno INT
 WITH ENCRYPTION AS
@@ -1662,108 +1211,10 @@ END
 
 GO
 
-CREATE TABLE Transactions
-(
-  TransSno INT PRIMARY KEY IDENTITY(1,1),  
-  Trans_Date INT,
-  VouTypeSno INT,
-  SeriesSno INT,  
-  Trans_No VARCHAR(20),
-  Due_Date INT,
-  PartySno INT,
-  RefSno INT,
-  Batch_Bills VARCHAR(50),
-  TotQty SMALLINT,
-  TotGrossWt DECIMAL(8,3),
-  TotStoneWt DECIMAL(8,3),
-  TotNettWt DECIMAL(8,3),
-  TotSilverWt DECIMAL(8,3),
-  TotPureWt DECIMAL(8,3),
-  TotPureSilverWt DECIMAL(8,3),
-  TotAmount MONEY,
-  TaxPer DECIMAL(4,2),
-  TaxAmount MONEY,
-  RevAmount MONEY,
-  NettAmt MONEY, 
-  PayMode TINYINT,
-  Remarks VARCHAR(100),
-  Print_Remarks VARCHAR(100),
-  Doc_Status TINYINT,
-  CompSno INT,
-  UserSno INT,
-  Locked BIT,
-  Cash_Amount MONEY,
-  Bank_Amount MONEY,
-  BankLedSno INT,
-  Bank_Details VARCHAR(50),
-  VouSno INT
-)
 
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Sp_Transaction') BEGIN DROP PROCEDURE Sp_Transaction END
 GO
-
-INSERT INTO Transactions(Trans_No, Trans_Date, VouTypeSno, SeriesSno,CompSno) VALUES ('',0,1,1,1)
-INSERT INTO Transactions(Trans_No, Trans_Date, VouTypeSno, SeriesSno,CompSno) VALUES ('',0,1,1,2)
-GO
-
-
-CREATE TABLE Transaction_Details
-(
-  DetSno INT PRIMARY KEY IDENTITY(1,1),
-  TransSno INT,
-  BatchSno INT,  
-  ItemSno INT,  
-  UomSno INT,
-  Karat TINYINT,
-  PurityPer DECIMAL(5,2),
-  Qty SMALLINT,
-  GrossWt DECIMAL(8,3),
-  StoneWt DECIMAL(8,3),
-  Wastage DECIMAL(8,3),
-  NettWt DECIMAL(8,3),
-  SilverWt DECIMAL(8,3),
-  SilverPurity DECIMAL(8,3),
-  PureWt DECIMAL(8,3),
-  PureSilverWt DECIMAL(8,3),
-  Rate MONEY,
-  Amount MONEY,
-  Remarks VARCHAR(20)
-)
-GO
-
-
-
-INSERT INTO Transaction_Details(TransSno, BatchSno, ItemSno, UomSno, Karat, PurityPer, Qty, GrossWt, StoneWt, Wastage, NettWt, SilverWt, SilverPurity, PureWt, PureSilverWt, Rate, Amount, Remarks)
-VALUES (1,0,1,1,24,100,0,0,0,0,0,0,0,0,0,0,0,'LEFT OVER GOLD')
-
-INSERT INTO Transaction_Details(TransSno, BatchSno, ItemSno, UomSno, Karat, PurityPer, Qty, GrossWt, StoneWt, Wastage, NettWt, SilverWt, SilverPurity, PureWt, PureSilverWt, Rate, Amount, Remarks)
-VALUES (2,0,4,3,24,100,0,0,0,0,0,0,0,0,0,0,0,'LEFT OVER GOLD')
-
-GO
-
-CREATE TABLE Batch_Bills
-(
-  BillSno INT PRIMARY KEY IDENTITY(1,1),
-  SourceTransSno INT,
-  TransSno INT
-)
-GO
-
-CREATE TABLE Batch_Items
-(
-  BatchSno      INT PRIMARY KEY IDENTITY(1,1),
-  TransSno      INT,
-  DetSno        INT,
-  Batch_No      VARCHAR(20),
-  Stock_Status  BIT
-)
-GO
-
-INSERT INTO Batch_Items(TransSno, DetSno, Batch_No, Stock_Status) VALUES (1,1,'LEFT OVER GOLD',0)
-INSERT INTO Batch_Items(TransSno, DetSno, Batch_No, Stock_Status) VALUES (2,2,'LEFT OVER GOLD',0)
-GO
-
-
-ALTER PROCEDURE Sp_Transaction
+CREATE PROCEDURE Sp_Transaction
 	@TransSno           INT,  
   @Trans_Date         INT,
   @VouTypeSno         INT,
@@ -2144,7 +1595,8 @@ END
 
 GO
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getTransactions') BEGIN DROP FUNCTION Udf_getTransactions END
+GO
 CREATE FUNCTION Udf_getTransactions(@TransSno INT,@VouTypeSno INT, @SeriesSno INT, @CompSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -2161,7 +1613,7 @@ RETURN
           (SELECT Ser.*, Ser.Series_Name as 'Name', Ser.Series_Name as 'Details' FROM Voucher_Series Ser WHERE SeriesSno = Trans.SeriesSno FOR JSON PATH) Series_Json,
 
           (SELECT   Pty.*, Pty.Party_Name as 'Name', Pty.Party_Code as 'Details',
-                    ProfileImage= CASE WHEN EXISTS(SELECT DetSno FROM Image_Details WHERE TransSno=Pty.PartySno AND Image_Grp=1 AND CompSno=@CompSno) THEN 'https://www.finaccsaas.com/Sharma/data/'+(SELECT TOP 1 Image_Url FROM Image_Details WHERE TransSno=Pty.PartySno AND Image_Grp=1 AND CompSno=@CompSno) ELSE '' END
+                    ProfileImage= CASE WHEN EXISTS(SELECT DetSno FROM Image_Details WHERE TransSno=Pty.PartySno AND Image_Grp=1 AND CompSno=@CompSno) THEN 'https://finaccsaas.com/Sharma/data/'+(SELECT TOP 1 Image_Url FROM Image_Details WHERE TransSno=Pty.PartySno AND Image_Grp=1 AND CompSno=@CompSno) ELSE '' END
            FROM     Party Pty WHERE PartySno = Trans.PartySno FOR JSON PATH) Party_Json,
 
           (SELECT   Det.*,
@@ -2192,7 +1644,7 @@ RETURN
 
            WHERE    Det.TransSno = Trans.TransSno FOR JSON PATH) Items_Json,
 
-          ISNULL((SELECT Img.Image_Name,'' as Image_File, Image_Url='https://www.finaccsaas.com/Sharma/data/' + Img.Image_Url, '1' as SrcType, 0 as DelStatus FROM Image_Details Img WHERE TransSno = Trans.TransSno AND Image_Grp=2 FOR JSON PATH),'') Images_Json,
+          ISNULL((SELECT Img.Image_Name,'' as Image_File, Image_Url='https://finaccsaas.com/Sharma/data/' + Img.Image_Url, '1' as SrcType, 0 as DelStatus FROM Image_Details Img WHERE TransSno = Trans.TransSno AND Image_Grp=2 FOR JSON PATH),'') Images_Json,
 
           ISNULL((SELECT Trans_No as 'Name', 'Date: ' + CAST([dbo].IntToDate(Trans_Date) AS VARCHAR) as 'Details', * FROM Transactions WHERE TransSno = Trans.RefSno FOR JSON PATH),'') Ref_Json,
 
@@ -2230,7 +1682,8 @@ RETURN
 
 GO
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Sp_Transaction_Delete') BEGIN DROP PROCEDURE Sp_Transaction_Delete END
+GO
 CREATE PROCEDURE Sp_Transaction_Delete
 	@TransSno INT
 WITH ENCRYPTION AS
@@ -2284,7 +1737,8 @@ CloseNow:
 END
 GO
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getItems') BEGIN DROP FUNCTION Udf_getItems END
+GO
 CREATE FUNCTION Udf_getItems(@ItemSno INT,@CompSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -2306,7 +1760,8 @@ GO
 
 
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getPendingSmeltings') BEGIN DROP FUNCTION Udf_getPendingSmeltings END
+GO
 CREATE FUNCTION Udf_getPendingSmeltings(@CompSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -2320,7 +1775,8 @@ RETURN
 
   GO
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getPendingRefinings') BEGIN DROP FUNCTION Udf_getPendingRefinings END
+GO
  CREATE FUNCTION Udf_getPendingRefinings(@CompSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -2334,6 +1790,8 @@ RETURN
 
   GO
 
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getPendingCastings') BEGIN DROP FUNCTION Udf_getPendingCastings END
+GO
 CREATE FUNCTION Udf_getPendingCastings(@CompSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -2347,6 +1805,8 @@ RETURN
 
   GO
 
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getPendingSmeltingIssues') BEGIN DROP FUNCTION Udf_getPendingSmeltingIssues END
+GO
 CREATE FUNCTION Udf_getPendingSmeltingIssues(@CompSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -2363,7 +1823,8 @@ RETURN
 
   GO
 
-  
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getPendingRefiningIssues') BEGIN DROP FUNCTION Udf_getPendingRefiningIssues END
+GO 
 CREATE FUNCTION Udf_getPendingRefiningIssues(@CompSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -2384,7 +1845,9 @@ RETURN
   GROUP BY Trans.TransSno, Trans.Trans_No, Trans.VouTypeSno, Trans.Trans_Date, Trans.TotQty, Trans.TotGrossWt, Trans.TotNettWt, Trans.TotSilverWt, Trans.TotPureWt, Trans.TotPureSilverWt, Trans.TotAmount, Trans.NettAmt, Trans.Due_Date,Pty.PartySno, Pty.Party_Name
 
   GO
-  
+
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getPendingCastingIssues') BEGIN DROP FUNCTION Udf_getPendingCastingIssues END
+GO
 CREATE FUNCTION Udf_getPendingCastingIssues(@CompSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -2401,6 +1864,8 @@ RETURN
 
   GO
 
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getPendingDeliveryDocs') BEGIN DROP FUNCTION Udf_getPendingDeliveryDocs END
+GO
 CREATE FUNCTION Udf_getPendingDeliveryDocs(@CompSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -2417,6 +1882,8 @@ RETURN
 
   GO
 
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getPendingJobworkInwards') BEGIN DROP FUNCTION Udf_getPendingJobworkInwards END
+GO
 CREATE FUNCTION Udf_getPendingJobworkInwards(@CompSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -2435,6 +1902,8 @@ RETURN
 
   
 
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getPendingPurchaseOrders') BEGIN DROP FUNCTION Udf_getPendingPurchaseOrders END
+GO
 CREATE FUNCTION Udf_getPendingPurchaseOrders(@CompSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -2447,10 +1916,12 @@ RETURN
   FROM    Transactions Trans
           INNER JOIN Voucher_Series Ser ON Ser.SeriesSno=Trans.SeriesSno AND Ser.VouTypeSno = 19
           INNER JOIN Party Pty ON Pty.PartySno=Trans.PartySno
-  WHERE   Trans.CompSno=@CompSno AND  (Trans.TransSno NOT IN (SELECT RefSno FROM Transactions WHERE VouTypeSno IN(2,3) AND CompSno=@CompSno ))
+  WHERE   Trans.CompSno=@CompSno AND  (Trans.TransSno NOT IN (SELECT RefSno FROM Transactions WHERE RefSno <> 0 AND VouTypeSno IN(2,3) AND CompSno=@CompSno ))
 
   GO
 
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getPendingSalesOrders') BEGIN DROP FUNCTION Udf_getPendingSalesOrders END
+GO
 CREATE FUNCTION Udf_getPendingSalesOrders(@CompSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -2467,6 +1938,8 @@ RETURN
 
   GO
 
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='VW_STOCK_REGISTER') BEGIN DROP VIEW VW_STOCK_REGISTER END
+GO
 CREATE VIEW VW_STOCK_REGISTER
 WITH ENCRYPTION AS
 
@@ -2497,7 +1970,8 @@ WITH ENCRYPTION AS
 
 GO
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='VW_BATCH_STOCK') BEGIN DROP VIEW VW_BATCH_STOCK END
+GO
 CREATE VIEW VW_BATCH_STOCK
 WITH ENCRYPTION AS
 
@@ -2605,6 +2079,8 @@ GROUP BY	Bat.BatchSno, Bat.Batch_No, Trans.CompSno, Trans.VouTypeSno, Trans.Tran
             InDet.Karat, InDet.PurityPer, InDet.Remarks, InDet.Qty, InDet.GrossWt , InDet.StoneWt, InDet.NettWt, InDet.Wastage, InDet.PureWt, InDet.PureSilverWt, InDet.Rate, InDet.Amount
 GO
 
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getStockReport') BEGIN DROP FUNCTION Udf_getStockReport END
+GO
 CREATE FUNCTION Udf_getStockReport(@CompSno INT,@GrpSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -2624,36 +2100,8 @@ RETURN
 
 
  
- select * from items
- select * from Udf_getStockReport(1,1)
- select * from VW_STOCK_REGISTER
-/*CREATE FUNCTION Udf_getBatchStock(@CompSno INT)
-RETURNS TABLE
-WITH ENCRYPTION AS
-RETURN
-
-    SELECT    0 as Selected, Bat.BatchSno, Bat.Batch_No, Trans.Trans_No, Trans.Trans_Date, VTyp.VouType_Name,
-              Det.ItemSno, It.Item_Name, It.Item_Code, Det.UomSno, Um.Uom_Code, Um.Uom_Name, Um.Base_Qty,
-              Det.Karat, Det.PurityPer, Det.Remarks as 'Description', Det.PureWt, Det.PureSilverWt,
-
-              CAST(Det.GrossWt /Det.Qty as DECIMAL(8,3)) as GrossWt, CAST(Det.StoneWt/Det.Qty as DECIMAL(8,3)) as StoneWt , CAST(Det.NettWt/Det.Qty as DECIMAL(8,3)) as NettWt,
-              CAST(Det.Wastage/Det.Qty as DECIMAL(8,3)) as Wastage,   
-
-              --Det.Rate/ Det.Qty as Rate, Det.Amount/Det.Qty as Amount
-              Det.Rate Rate, Det.Amount/Det.Qty as Amount
-
-    FROM      Batch_Items Bat
-              INNER JOIN Transactions Trans ON Trans.TransSno = Bat.TransSno
-              INNER JOIN Voucher_Types VTyp ON VTyp.VouTypeSno = Trans.VouTypeSno
-              INNER JOIN Transaction_Details Det On Det.DetSno = Bat.DetSno
-              INNER JOIN Items It On It.ItemSno = Det.ItemSno
-              INNER JOIN Uoms Um ON Um.UomSno = Det.UomSno
-              
-    WHERE     (Trans.CompSno = @CompSno) AND Bat.BatchSno NOT IN (SELECT BatchSno FROM Transaction_Details Td INNER JOIN Transactions Tr ON Tr.TransSno=Td.TransSno AND Tr.CompSno=@CompSno)
-  */  
-  
-  
-  
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getBatchStock') BEGIN DROP FUNCTION Udf_getBatchStock END
+GO
 CREATE FUNCTION Udf_getBatchStock(@CompSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -2672,7 +2120,8 @@ WHERE		  (CompSno = @CompSno)  AND BalNettWt > 0
 GO
 
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getCashRegister') BEGIN DROP FUNCTION Udf_getCashRegister END
+GO
 CREATE FUNCTION Udf_getCashRegister(@CompSno INT,@CashLedSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -2690,7 +2139,8 @@ RETURN
     
  GO
 
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getBalance') BEGIN DROP FUNCTION Udf_getBalance END
+GO
 CREATE FUNCTION Udf_getBalance(@CompSno INT,@CashLedSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -2707,6 +2157,8 @@ SELECT		    SUM(Det.Debit)- SUM(Det.Credit) as OpeningBalance
 GO
  --SELECT * FROM Udf_getCashRegister(1,1)
 
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Udf_getBatchHistory') BEGIN DROP FUNCTION Udf_getBatchHistory END
+GO
 CREATE FUNCTION Udf_getBatchHistory(@BatchSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS

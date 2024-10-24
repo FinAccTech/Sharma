@@ -29,7 +29,7 @@ export class PartycardComponent {
        this.SelectedParty = changes['SelectedParty'].currentValue;
     }    
   }
-
+ 
   LoadParties(){    
     let pty = new ClsParties(this.dataService);
     pty.getParties(0,this.PartyCat).subscribe(data => {      

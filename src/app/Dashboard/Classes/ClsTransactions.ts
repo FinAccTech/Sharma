@@ -241,7 +241,7 @@ export interface TypeTransactions{
     Series_Json?: string;
     Party_Json?: string;
     Items_Json?: string;
-    Images_Json?: string;
+    Images_Json?: string;    
     Ref_Json?: string;
     Bank_Json?: string;
     Selected?: number;
